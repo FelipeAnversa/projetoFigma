@@ -1,10 +1,18 @@
 import * as React from 'react';
 import { createTheme , ThemeProvider } from '@mui/material';
 import { Box , Stack , TextField , Button , Card } from '@mui/material';
+import Transacao from './importantes/Transacao';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import Pagination from '@mui/material/Pagination';
+import { useState } from 'react';
+
 
 export default function Pagina() {
+    const [valorEntradas, setValorEntradas] = useState('');
+    const [valorSaidas, setValorSaidas] = useState('');
+    const valorTotal = valorEntradas - valorSaidas;
+    
     const theme = createTheme({
         palette: {
             produto: {
@@ -34,7 +42,7 @@ export default function Pagina() {
                     Entradas
                 </Typography>
                 <Typography variant="h5" component="div">
-                    R$ 17.400,00
+                    {valorEntradas ? `R$ ${valorEntradas}` : 'R$ 0,00'}
                 </Typography>
             </CardContent>
         </React.Fragment>
@@ -47,7 +55,7 @@ export default function Pagina() {
                     Saídas
                 </Typography>
                 <Typography variant="h5" component="div">
-                    R$ 1.259,00
+                    {valorSaidas ? `R$ ${valorSaidas}` : 'R$ 0,00'}
                 </Typography>
             </CardContent>
         </React.Fragment>
@@ -60,7 +68,7 @@ export default function Pagina() {
                     Total
                 </Typography>
                 <Typography variant="h5" component="div">
-                    R$ 16.141,00
+                    {valorTotal ? `R$ ${valorTotal}` : 'R$ 0,00'}
                 </Typography>
             </CardContent>
         </React.Fragment>
@@ -98,16 +106,13 @@ export default function Pagina() {
                             }}
                         >
                             <img src="fotos/image.png" alt="Finance" width={180} height={50} />
-                            <Button 
-                                variant='contained'
-                                sx={{
-                                    position: 'absolute',
-                                    right: '5rem',
-                                    padding: '1rem 1.5rem',
-                                    backgroundColor: 'produto.green',
-                                    '&:hover': { backgroundColor: 'produto.greenDark' },
-                                }}
-                            >Nova transação</Button>
+                            <Transacao 
+                                tema={theme} 
+                                setValorEntradas={setValorEntradas} 
+                                setValorSaidas={setValorSaidas} 
+                                valorEntradas={valorEntradas} 
+                                valorSaidas={valorSaidas}
+                            />
                         </Stack>
                         <Box
                             sx={{
@@ -180,6 +185,22 @@ export default function Pagina() {
                                 '&:hover': { backgroundColor: 'produto.greenDark' },
                             }}
                         >Buscar</Button>
+                    </Stack>
+                    <Stack
+                        sx={{
+                            marginTop: '34rem',
+                            marginLeft: 'auto',
+                            marginRight: 'auto',
+                        }}
+                    >
+                        <Pagination 
+                            count={10}
+                            shape="rounded"
+                            sx={{
+                                '& .MuiPaginationItem-root': { color: 'base.white' },
+                                '& .MuiPaginationItem-root.Mui-selected': { backgroundColor: 'produto.green' },
+                            }}
+                        />
                     </Stack>
                 </Stack>
             </ThemeProvider>
