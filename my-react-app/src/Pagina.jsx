@@ -1,44 +1,23 @@
 import * as React from 'react';
-import { createTheme , ThemeProvider } from '@mui/material';
-import { Box , Stack , TextField , Button , Card } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
+import { Box, Stack, TextField, Button, Card } from '@mui/material';
 import Transacao from './importantes/Transacao';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
 import { useState } from 'react';
-
+import { theme } from './importantes/theme';
 
 export default function Pagina() {
-    const [valorEntradas, setValorEntradas] = useState('');
-    const [valorSaidas, setValorSaidas] = useState('');
+    const [valorEntradas, setValorEntradas] = useState(0);
+    const [valorSaidas, setValorSaidas] = useState(0);
     const valorTotal = valorEntradas - valorSaidas;
-    
-    const theme = createTheme({
-        palette: {
-            produto: {
-                greenDark: '#015F43',
-                green: '#00875F',
-                greenLight: '#00B37E',
-                redDark: '#AA2834',
-                red: '#F75A68', 
-            },
-            base: {
-                gray1: '#121214', // BACKGROUND
-                gray2: '#202024', // SHAPE PRINCIPAL
-                gray3: '#29292E', // SHAPE SECUNDÁRIA
-                gray4: '#323238', // SHAPE TERCIÁRIA
-                gray5: '#7C7C8A', // PLACEHOLDER
-                gray6: '#C4C4CC', // TEXTO BASE
-                gray7: '#E1E1E6', // TITULOS
-                white: '#ffffff',
-            },
-        },
-    });
+
     
     const entradas = (
         <React.Fragment>
             <CardContent>
-                <Typography sx={{ fontSize: 14 }} color="base.white" gutterBottom>
+                <Typography sx={{ fontSize: 14 }} color="grey.700" gutterBottom>
                     Entradas
                 </Typography>
                 <Typography variant="h5" component="div">
@@ -51,7 +30,7 @@ export default function Pagina() {
     const saidas = (
         <React.Fragment>
             <CardContent>
-                <Typography sx={{ fontSize: 14 }} color="base.white" gutterBottom>
+                <Typography sx={{ fontSize: 14 }} color="grey.700" gutterBottom>
                     Saídas
                 </Typography>
                 <Typography variant="h5" component="div">
@@ -64,7 +43,7 @@ export default function Pagina() {
     const total = (
         <React.Fragment>
             <CardContent>
-                <Typography sx={{ fontSize: 14 }} color="base.white" gutterBottom>
+                <Typography sx={{ fontSize: 14 }} color="grey.700" gutterBottom>
                     Total
                 </Typography>
                 <Typography variant="h5" component="div">
@@ -75,135 +54,134 @@ export default function Pagina() {
     );
 
     return (
-        <>
-            <ThemeProvider theme={theme}>
-                <Stack
+        <ThemeProvider theme={theme}>
+            <Stack
+                sx={{
+                    backgroundColor: 'grey.100',
+                    height: '100vh',
+                    width: '100vw',
+                    fontFamily: 'Roboto, sans-serif',
+                }}
+            >
+                <Box
                     sx={{
-                        backgroundColor: 'base.gray2',
-                        height: '100vh',
-                        width: '100vw',
-                        fontFamily: 'Roboto, sans-serif',
+                        backgroundColor: 'grey.50',
+                        color: 'grey.600',
+                        height: '20vh',
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        position: 'relative',
                     }}
                 >
+                    <Stack
+                        direction="row"
+                        sx={{
+                            width: '90vw',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <img src="fotos/image.png" alt="Finance" width={180} height={50} />
+                        <Transacao 
+                            setValorEntradas={setValorEntradas} 
+                            setValorSaidas={setValorSaidas} 
+                        />
+                    </Stack>
                     <Box
                         sx={{
-                            backgroundColor: 'base.gray1',
-                            color: 'base.gray7',
-                            height: '20vh',
-                            width: '100%',
+                            position: 'absolute',
+                            bottom: '-3rem',
                             display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            position: 'relative',
                         }}
                     >
-                        <Stack
-                            direction="row"
+                        <Card
                             sx={{
-                                width: '90vw',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
+                                minWidth: 400,
+                                margin: '0 1rem',
+                                bgcolor: 'grey.200',
+                                color: 'grey.600',
                             }}
                         >
-                            <img src="fotos/image.png" alt="Finance" width={180} height={50} />
-                            <Transacao 
-                                tema={theme} 
-                                setValorEntradas={setValorEntradas} 
-                                setValorSaidas={setValorSaidas} 
-                                valorEntradas={valorEntradas} 
-                                valorSaidas={valorSaidas}
-                            />
-                        </Stack>
-                        <Box
+                            {entradas}
+                        </Card>
+                        <Card
                             sx={{
-                                position: 'absolute',
-                                bottom: '-3rem',
-                                display: 'flex',
+                                minWidth: 400,
+                                margin: '0 1rem',
+                                bgcolor: 'grey.200',
+                                color: 'grey.600',
                             }}
                         >
-                            <Card
-                                sx={{
-                                    minWidth: 400,
-                                    margin: '0 1rem',
-                                    bgcolor: 'base.gray3',
-                                    color: 'base.gray7',
-                                }}
-                            >
-                                {entradas}
-                            </Card>
-                            <Card
-                                sx={{
-                                    minWidth: 400,
-                                    margin: '0 1rem',
-                                    bgcolor: 'base.gray3',
-                                    color: 'base.gray7',
-                                }}
-                            >
-                                {saidas}
-                            </Card>
-                            <Card
-                                sx={{
-                                    minWidth: 400,
-                                    margin: '0 1rem',
-                                    bgcolor: 'produto.green',
-                                    color: 'base.white',
-                                }}
-                            >
-                                {total}
-                            </Card>
-                        </Box>
+                            {saidas}
+                        </Card>
+                        <Card
+                            sx={{
+                                minWidth: 400,
+                                margin: '0 1rem',
+                                bgcolor: 'primary.main',
+                                color: 'grey.700',
+                            }}
+                        >
+                            {total}
+                        </Card>
                     </Box>
+                </Box>
 
-                    <Stack
+                <Stack
+                    sx={{
+                        display: 'block',
+                        alignItems: 'center',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                    }}
+                >
+                    <TextField 
+                        id="filled-basic" 
+                        label="Busque uma transação" 
+                        variant="filled"
                         sx={{
-                            display: 'block',
-                            alignItems: 'center',
-                            marginLeft: 'auto',
-                            marginRight: 'auto',
+                            marginTop: '6rem',
+                            width: '80vw',
+                            bgcolor: 'grey.50',
+                            '& .MuiInputLabel-root': { color: 'grey.400' },
+                            '& .MuiFilledInput-root': { color: 'grey.500' },
+                            '& .MuiFilledInput-underline:after': { 
+                                borderBottomColor: 'primary.main' 
+                            },
                         }}
-                    >
-                        <TextField 
-                            id="filled-basic" 
-                            label="Busque uma transação" 
-                            variant="filled"
-                            sx={{
-                                marginTop: '6rem',
-                                width: '80vw',
-                                bgcolor: 'base.gray1',
-                                '& .MuiInputLabel-root': { color: 'base.gray5' },
-                                '& .MuiFilledInput-root': { color: 'base.gray6' },
-                                '& .MuiFilledInput-underline:after': { borderBottomColor: 'produto.green' },
-                            }}
-                        />
-                        <Button 
-                            variant="contained"
-                            sx={{
-                                marginTop: '6rem',
-                                marginLeft: '10px',
-                                padding: '1rem 1.5rem',
-                                backgroundColor: 'produto.green',
-                                '&:hover': { backgroundColor: 'produto.greenDark' },
-                            }}
-                        >Buscar</Button>
-                    </Stack>
-                    <Stack
+                    />
+                    <Button 
+                        variant="contained"
                         sx={{
-                            marginTop: '34rem',
-                            marginLeft: 'auto',
-                            marginRight: 'auto',
+                            marginTop: '6rem',
+                            marginLeft: '10px',
+                            padding: '1rem 1.5rem',
+                            backgroundColor: 'primary.main',
+                            '&:hover': { backgroundColor: 'primary.dark' },
                         }}
-                    >
-                        <Pagination 
-                            count={10}
-                            shape="rounded"
-                            sx={{
-                                '& .MuiPaginationItem-root': { color: 'base.white' },
-                                '& .MuiPaginationItem-root.Mui-selected': { backgroundColor: 'produto.green' },
-                            }}
-                        />
-                    </Stack>
+                    >Buscar</Button>
                 </Stack>
-            </ThemeProvider>
-        </>
+                <Stack
+                    sx={{
+                        marginTop: '34rem',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                    }}
+                >
+                    <Pagination 
+                        count={10}
+                        shape="rounded"
+                        sx={{
+                            '& .MuiPaginationItem-root': { color: 'grey.700' },
+                            '& .MuiPaginationItem-root.Mui-selected': { 
+                                backgroundColor: 'primary.main' 
+                            },
+                        }}
+                    />
+                </Stack>
+            </Stack>
+        </ThemeProvider>
     );
 }
