@@ -42,6 +42,7 @@ export default function Transacao({ setValorEntradas, setValorSaidas, setRows })
     
     const handleCadastrar = () => {
         const valorNumerico = parseFloat(preco);
+        const precoParaTabela = tipoTransacao === 'saida' ? -valorNumerico : valorNumerico;
         
         if (isNaN(valorNumerico) || valorNumerico <= 0) {
             alert('Por favor, insira um valor válido maior que zero');
@@ -55,7 +56,7 @@ export default function Transacao({ setValorEntradas, setValorSaidas, setRows })
         }
         
         const dataFormatada = ComponenteData();
-        const novaTransacao = createData(descricao, preco, categoria, dataFormatada);
+        const novaTransacao = createData(descricao, precoParaTabela, categoria, dataFormatada);
         setRows(prevRows => [...prevRows, novaTransacao]);
         
         handleClose();
@@ -204,7 +205,7 @@ export default function Transacao({ setValorEntradas, setValorSaidas, setRows })
                                 color: 'white',
                                 minWidth: 120,
                                 '&:hover': {
-                                    backgroundColor: 'primery.dark'
+                                    backgroundColor: 'primary.dark'
                                 },
                                 '&.Mui-disabled': {
                                     backgroundColor: 'primary.main',
