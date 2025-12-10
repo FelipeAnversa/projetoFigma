@@ -14,7 +14,7 @@ export default function Tabela({ rowsFiltradas }) {
                     overflow: 'hidden',
                 }}
                 >
-                <Table sx={{ minWidth: 650 }} aria-label="customized table">
+                <Table sx={{ minWidth: 650, borderCollapse: 'separate', borderSpacing: '0px 8px' }} aria-label="customized table">
                     <TableBody>
                         {rowsFiltradas.map((row) => (
                             <TableRow

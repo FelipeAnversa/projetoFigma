@@ -15,7 +15,7 @@ export default function Pagina() {
     const valorTotal = valorEntradas - valorSaidas;
     const [rows, setRows] = useState([]);
     const [busca, setBusca] = useState('');
-    const [buscaFiltrada, setBuscaFiltrada] = useState([]);
+    const [buscaFiltrada, setBuscaFiltrada] = useState('');
     const [rowsFiltradas, setRowsFiltradas] = useState([]);
 
     const entradas = (
