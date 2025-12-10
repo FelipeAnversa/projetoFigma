@@ -22,7 +22,7 @@ export default function Login() {
             setErro('');
             setTimeout(() => {
                 setLogado(true);
-            }, 1500);
+            }, 1000);
         } else {
             setErro('Usuário ou senha inválidos.');
             setSucesso('');
@@ -50,8 +50,8 @@ export default function Login() {
                     gap: 2,
                 }}
             >
-                <Typography variant="h4" component="div" sx={{ margin: '2rem' }}>
-                    Página de Login
+                <Typography variant="h4" component="div" sx={{ margin: '2rem', fontFamily: 'Roboto, sans-serif' }}>
+                    <b>Página de Login</b>
                 </Typography>
                 
                 <TextField
