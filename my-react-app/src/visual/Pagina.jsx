@@ -1,13 +1,12 @@
-import * as React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { Box, Stack, Typography, CardContent } from '@mui/material';
 import { useState } from 'react';
-import { theme } from './importantes/theme';
-import Transacao from './importantes/Transacao';
-import Cards from './importantes/Cards';
-import Paginacao from './importantes/Paginacao';
-import Filtrar from './importantes/Filtrar';
-import Tabela from './importantes/Tabela';
+import { theme } from '../importantes/theme';
+import Transacao from '../importantes/Transacao';
+import Cards from '../importantes/Cards';
+import Paginacao from '../importantes/Paginacao';
+import Filtrar from '../importantes/Filtrar';
+import Tabela from '../importantes/Tabela';
 
 export default function Pagina() {
     const [valorEntradas, setValorEntradas] = useState(0);
