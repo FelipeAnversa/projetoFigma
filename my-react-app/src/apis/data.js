@@ -6,7 +6,7 @@ export const data = [
         valor: 0,
         categoria: "teste",
         tipo: "saida",
-        data: "2025-12-10 16:17:50",
+        data: "2025/12/10",
     },
     {
         id: 13,
@@ -15,7 +15,7 @@ export const data = [
         valor: 0,
         categoria: "teste",
         tipo: "saida",
-        data: "2025-12-10 16:17:50",
+        data: "2025/12/10",
     },
     {
         id: 11,
@@ -24,7 +24,7 @@ export const data = [
         valor: 0,
         categoria: "teste",
         tipo: "saida",
-        data: "2025-12-10 16:17:49",
+        data: "2025/12/10",
     },
     {
         id: 9,
@@ -33,7 +33,7 @@ export const data = [
         valor: 0,
         categoria: "teste",
         tipo: "saida",
-        data: "2025-12-10 16:17:48",
+        data: "2025/12/10",
     },
     {
         id: 10,
@@ -42,7 +42,7 @@ export const data = [
         valor: 0,
         categoria: "teste",
         tipo: "saida",
-        data: "2025-12-10 16:17:48",
+        data: "2025/12/10",
     },
     {
         id: 8,
@@ -51,7 +51,7 @@ export const data = [
         valor: 0,
         categoria: "teste",
         tipo: "saida",
-        data: "2025-12-10 16:17:47",
+        data: "2025/12/10",
     },
     {
         id: 6,
@@ -60,7 +60,7 @@ export const data = [
         valor: 0,
         categoria: "teste",
         tipo: "saida",
-        data: "2025-12-10 16:17:46",
+        data: "2025/12/10",
     },
     {
         id: 7,
@@ -69,7 +69,7 @@ export const data = [
         valor: 0,
         categoria: "teste",
         tipo: "saida",
-        data: "2025-12-10 16:17:46",
+        data: "2025/12/10",
     },
     {
         id: 4,
@@ -78,7 +78,7 @@ export const data = [
         valor: 0,
         categoria: "teste",
         tipo: "saida",
-        data: "2025-12-10 16:17:45",
+        data: "2025/12/10",
     },
     {
         id: 5,
@@ -87,6 +87,6 @@ export const data = [
         valor: 0,
         categoria: "teste",
         tipo: "saida",
-        data: "2025-12-10 16:17:45",
+        data: "2025/12/10",
     },
 ];
