@@ -3,12 +3,10 @@ import { Button, TextField } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme';
 
-export default function Filtrar({ buscaFiltrada, rows, setRowsFiltradas, setBuscaFiltrada, busca, setBusca }) {
-    
-    
+export default function Filtrar({ buscaFiltrada, rows, setRowsFiltradas, setBuscaFiltrada, busca, setBusca, setPageAtual }) {
     useEffect(() => {
-        filtrar(buscaFiltrada, rows, setRowsFiltradas);
-    }, [buscaFiltrada, rows, setRowsFiltradas, filtrar]);
+        filtrar(buscaFiltrada, rows, setRowsFiltradas, setPageAtual);
+    }, [buscaFiltrada, rows, setRowsFiltradas, filtrar, setPageAtual]);
     
     return (
         <ThemeProvider theme={theme}>
@@ -41,7 +39,7 @@ export default function Filtrar({ buscaFiltrada, rows, setRowsFiltradas, setBusc
     );
 }
 
-const filtrar = (buscaFiltrada, rows, setRowsFiltradas) => {
+const filtrar = (buscaFiltrada, rows, setRowsFiltradas, setPageAtual) => {
     if (buscaFiltrada === '' || buscaFiltrada === null) {
         setRowsFiltradas(rows);
     } else {
@@ -51,5 +49,6 @@ const filtrar = (buscaFiltrada, rows, setRowsFiltradas) => {
             row.data.toLowerCase().includes(buscaFiltrada.toLowerCase())
         );
         setRowsFiltradas(filtro);
+        setPageAtual(1);
     }
 };

@@ -24,10 +24,10 @@ export default function Tabela({ rowsFiltradas }) {
                                 <TableCell sx={{ color: 'grey.600' }} component="th" scope="row">{row.descricao}</TableCell>
                                 <TableCell 
                                     sx={{
-                                        color: row.preco < 0 ? 'error.main' : 'primary.main'
+                                        color: row.valor < 0 ? 'error.main' : 'primary.main'
                                     }}
                                     align="right"
-                                >R$ {row.preco.toFixed(2)}</TableCell>
+                                >R$ {row.valor.toFixed(2)}</TableCell>
                                 <TableCell sx={{ color: 'grey.600' }} align="right">{row.categoria}</TableCell>
                                 <TableCell sx={{ color: 'grey.600' }} align="right">{row.data}</TableCell>
                             </TableRow>

@@ -1,21 +1,32 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { Box, Stack, Typography, CardContent } from '@mui/material';
-import { useState } from 'react';
+import { useState , useMemo } from 'react';
 import { theme } from '../importantes/theme';
 import Transacao from '../importantes/Transacao';
 import Cards from '../importantes/Cards';
 import Paginacao from '../importantes/Paginacao';
 import Filtrar from '../importantes/Filtrar';
 import Tabela from '../importantes/Tabela';
+import { data } from '../apis/data';
 
 export default function Pagina() {
     const [valorEntradas, setValorEntradas] = useState(0);
     const [valorSaidas, setValorSaidas] = useState(0);
     const valorTotal = valorEntradas - valorSaidas;
-    const [rows, setRows] = useState([]);
+    const dados = data;
+    const [rows, setRows] = useState([...dados]);
     const [busca, setBusca] = useState('');
     const [buscaFiltrada, setBuscaFiltrada] = useState('');
     const [rowsFiltradas, setRowsFiltradas] = useState([]);
+    const [pageAtual, setPageAtual] = useState(1);
+    const itemsPorPagina = 7;
+    const totalPaginas = rowsFiltradas.length > 0 ? Math.ceil(rowsFiltradas.length / itemsPorPagina) : 1;
+
+    const dadosPaginaAtual = useMemo(() => {
+        const startIndex = (pageAtual - 1) * itemsPorPagina;
+        const endIndex = startIndex + itemsPorPagina;
+        return rowsFiltradas.slice(startIndex, endIndex);
+    }, [rowsFiltradas, pageAtual, itemsPorPagina]);
 
     const entradas = (
         <CardContent>
@@ -128,6 +139,7 @@ export default function Pagina() {
                         setBuscaFiltrada={setBuscaFiltrada}
                         busca={busca}
                         setBusca={setBusca}
+                        setPageAtual={setPageAtual}
                     />
 
                     </Stack>
@@ -141,9 +153,13 @@ export default function Pagina() {
                             marginBottom: '5rem',
                         }}
                     >
-                        <Tabela rowsFiltradas={rowsFiltradas} />
+                        <Tabela rowsFiltradas={dadosPaginaAtual} />
                     </Stack>
-                    <Paginacao />
+                    <Paginacao 
+                        totalPaginas={totalPaginas}
+                        pageAtual={pageAtual}
+                        setPageAtual={setPageAtual}
+                    />
                 </Box>
             </Stack>
         </ThemeProvider>

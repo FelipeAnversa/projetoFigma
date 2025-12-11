@@ -2,7 +2,11 @@ import { Box , Pagination } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme';
 
-export default function Paginacao() {
+export default function Paginacao({ pageAtual, setPageAtual, totalPaginas }) {
+    const handleChange = (event, value) => {
+        setPageAtual(value);
+    }
+
     return (
         <ThemeProvider theme={theme}>
             <Box
@@ -22,7 +26,9 @@ export default function Paginacao() {
                 }}
             >
                 <Pagination
-                    count={10}
+                    count={totalPaginas}
+                    page={pageAtual}
+                    onChange={handleChange}
                     shape="rounded"
                     sx={{
                         '& .MuiPaginationItem-root': { color: 'grey.700' },
