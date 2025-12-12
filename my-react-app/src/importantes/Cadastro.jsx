@@ -43,7 +43,7 @@ export default function Cadastro({ dadosLogin, onCadastroSucesso }) {
 
     return (
         <>
-            <Button variant="outlined" onClick={handleClickOpen}>
+            <Button variant="contained" onClick={handleClickOpen}>
                 Cadastrar
             </Button>
             <Dialog

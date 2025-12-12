@@ -1,4 +1,4 @@
-import { Box, Typography, TextField, Button, Stack, Alert, Snackbar } from '@mui/material';
+import { Box, Typography, TextField, Button, Stack, Alert, Snackbar, Card } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from '../importantes/theme';
 import { useState } from 'react';
@@ -46,14 +46,22 @@ export default function Login() {
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    height: '80vh',
+                    height: '100vh',
                     gap: 2,
+                    backgroundImage: `url('fotos/gremio.jpg')`,
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
                 }}
             >
-                <Typography variant="h4" component="div" sx={{ margin: '2rem', fontFamily: 'Roboto, sans-serif' }}>
-                    <b>Página de Login</b>
-                </Typography>
-                
+                <Card
+                    sx={{
+                        backgroundColor: 'grey.300'
+                    }}
+                >
+                    <Typography variant="h4" component="div" sx={{ margin: '2rem', fontFamily: 'Roboto, sans-serif', color: 'grey.700' }}>
+                        <b>Página de Login</b>
+                    </Typography>
+                </Card>
                 <TextField
                     label="Usuário"
                     variant="outlined"
