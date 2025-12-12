@@ -1,5 +1,5 @@
 import { ThemeProvider } from '@mui/material/styles';
-import { Box, Stack, Typography, CardContent } from '@mui/material';
+import { Box, Stack, Typography, CardContent, Card } from '@mui/material';
 import { useState , useMemo } from 'react';
 import { theme } from '../importantes/theme';
 import Transacao from '../importantes/Transacao';
@@ -8,6 +8,10 @@ import Paginacao from '../importantes/Paginacao';
 import Filtrar from '../importantes/Filtrar';
 import Tabela from '../importantes/Tabela';
 import { data } from '../apis/data';
+
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
+import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 
 export default function Pagina() {
     const [valorEntradas, setValorEntradas] = useState(0);
@@ -30,33 +34,51 @@ export default function Pagina() {
 
     const entradas = (
         <CardContent>
-            <Typography sx={{ fontSize: 14 }} color="grey.700" gutterBottom>
-                Entradas
-            </Typography>
+            <Stack
+                direction="row"
+                justifyContent="space-between"
+            >
+                <Typography sx={{ fontSize: 14 }} color="grey.700" gutterBottom>
+                    Entradas
+                </Typography>
+                <ArrowCircleUpIcon color="success"/>
+            </Stack>
             <Typography variant="h5" component="div">
-                {valorEntradas ? `R$ ${valorEntradas.toFixed(2)}` : 'R$ 0.00'}
+                <b>{valorEntradas ? `R$ ${valorEntradas.toFixed(2)}` : 'R$ 0.00'}</b>
             </Typography>
         </CardContent>
     );
 
     const saidas = (
         <CardContent>
-            <Typography sx={{ fontSize: 14 }} color="grey.700" gutterBottom>
-                Saídas
-            </Typography>
+            <Stack
+                direction="row"
+                justifyContent="space-between"
+            >
+                <Typography sx={{ fontSize: 14 }} color="grey.700" gutterBottom>
+                    Saídas
+                </Typography>
+                <ArrowCircleDownIcon sx={{ color: "error.main" }}/>
+            </Stack>
             <Typography variant="h5" component="div">
-                {valorSaidas ? `R$ ${valorSaidas.toFixed(2)}` : 'R$ 0.00'}
+                <b>{valorSaidas ? `R$ ${valorSaidas.toFixed(2)}` : 'R$ 0.00'}</b>
             </Typography>
         </CardContent>
     );
 
     const total = (
         <CardContent>
-            <Typography sx={{ fontSize: 14 }} color="grey.700" gutterBottom>
-                Total
-            </Typography>
+            <Stack
+                direction="row"
+                justifyContent="space-between"
+            >
+                <Typography sx={{ fontSize: 14 }} color="grey.700" gutterBottom>
+                    Total
+                </Typography>
+                <AttachMoneyIcon />
+            </Stack>
             <Typography variant="h5" component="div">
-                {valorTotal ? `R$ ${valorTotal.toFixed(2)}` : 'R$ 0.00'}
+                <b>{valorTotal ? `R$ ${valorTotal.toFixed(2)}` : 'R$ 0.00'}</b>
             </Typography>
         </CardContent>
     );
@@ -111,7 +133,16 @@ export default function Pagina() {
                     >
                         <Cards valor={entradas} />
                         <Cards valor={saidas} />
-                        <Cards valor={total} />
+                        <Card
+                            sx={{
+                                minWidth: { xs: 280, md: 400 },
+                                margin: '0 1rem',
+                                bgcolor: 'primary.dark',
+                                color: 'grey.600',
+                            }}
+                        >
+                            {total}
+                        </Card>
                     </Box>
                 </Box>
 

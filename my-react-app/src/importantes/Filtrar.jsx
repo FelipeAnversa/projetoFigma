@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Button, TextField } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme';
+import SearchIcon from '@mui/icons-material/Search';
 
 export default function Filtrar({ buscaFiltrada, rows, setRowsFiltradas, setBuscaFiltrada, busca, setBusca, setPageAtual }) {
     useEffect(() => {
@@ -26,15 +27,15 @@ export default function Filtrar({ buscaFiltrada, rows, setRowsFiltradas, setBusc
                 }}
             />
             <Button 
-                variant="contained"
+                variant="outlined"
                 onClick={() => setBuscaFiltrada(busca)}
                 sx={{
                     marginLeft: '10px',
                     padding: '1rem 1.5rem',
-                    backgroundColor: 'primary.main',
                     '&:hover': { backgroundColor: 'primary.dark' },
                 }}
-            >Buscar</Button>
+            >
+            <SearchIcon />Buscar</Button>
         </ThemeProvider>
     );
 }
