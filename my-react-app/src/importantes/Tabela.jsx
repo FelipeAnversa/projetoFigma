@@ -35,7 +35,7 @@ export default function Tabela({ rowsFiltradas }) {
                         <Box 
                             sx={{ 
                                 width: '20%', 
-                                color: row.valor < 0 ? 'error.main' : 'primary.light' 
+                                color: row.valor <= 0 ? 'error.main' : 'primary.light' 
                             }}
                         >R$ {row.valor.toFixed(2)}
                         </Box>

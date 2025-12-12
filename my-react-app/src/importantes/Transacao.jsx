@@ -5,17 +5,18 @@ import { theme } from './theme';
 
 export default function Transacao({ setValorEntradas, setValorSaidas, setRows }) {
     const [open, setOpen] = useState(false);
-    const [descricao, setDescricao] = useState('');
-    const [preco, setPreco] = useState('');
+    const [nome, setNome] = useState('');
+    const [valor, setValor] = useState('');
     const [categoria, setCategoria] = useState('');
     const [tipoTransacao, setTipoTransacao] = useState('entrada');
     
-    function createData(descricao, preco, categoria, data) {
+    function createData(nome, valor, categoria, tipo, data) {
         return { 
             id: Date.now(),
-            descricao, 
-            preco: parseFloat(preco),
+            nome, 
+            valor: parseFloat(valor),
             categoria, 
+            tipo, 
             data
         };
     }
@@ -34,14 +35,14 @@ export default function Transacao({ setValorEntradas, setValorSaidas, setRows })
     
     const handleClose = () => {
         setOpen(false);
-        setDescricao('');
-        setPreco('');
+        setNome('');
+        setValor('');
         setCategoria('');
         setTipoTransacao('entrada');
     };
     
     const handleCadastrar = () => {
-        const valorNumerico = parseFloat(preco);
+        const valorNumerico = parseFloat(valor);
         const precoParaTabela = tipoTransacao === 'saida' ? -valorNumerico : valorNumerico;
         
         if (isNaN(valorNumerico) || valorNumerico <= 0) {
@@ -56,7 +57,7 @@ export default function Transacao({ setValorEntradas, setValorSaidas, setRows })
         }
         
         const dataFormatada = ComponenteData();
-        const novaTransacao = createData(descricao, precoParaTabela, categoria, dataFormatada);
+        const novaTransacao = createData(nome, precoParaTabela, categoria, tipoTransacao, dataFormatada);
         setRows(prevRows => [...prevRows, novaTransacao]);
         
         handleClose();
@@ -122,8 +123,8 @@ export default function Transacao({ setValorEntradas, setValorSaidas, setRows })
                                 label="Descrição" 
                                 variant="outlined" 
                                 fullWidth 
-                                value={descricao}
-                                onChange={(e) => setDescricao(e.target.value)}
+                                value={nome}
+                                onChange={(e) => setNome(e.target.value)}
                                 sx={{
                                     '& .MuiOutlinedInput-root': {
                                         backgroundColor: 'grey.50'
@@ -136,8 +137,8 @@ export default function Transacao({ setValorEntradas, setValorSaidas, setRows })
                                 variant="outlined" 
                                 fullWidth 
                                 type="number"
-                                value={preco}
-                                onChange={(e) => setPreco(e.target.value)}
+                                value={valor}
+                                onChange={(e) => setValor(e.target.value)}
                                 sx={{
                                     '& .MuiOutlinedInput-root': {
                                         backgroundColor: 'grey.50'
@@ -213,7 +214,7 @@ export default function Transacao({ setValorEntradas, setValorSaidas, setRows })
                                 }
                             }}
                             onClick={handleCadastrar}
-                            disabled={!descricao || !preco || !categoria}
+                            disabled={!nome || !valor || !categoria}
                         >
                             Cadastrar
                         </Button>
