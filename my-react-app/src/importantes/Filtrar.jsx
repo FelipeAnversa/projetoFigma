@@ -44,7 +44,7 @@ const filtrar = (buscaFiltrada, rows, setRowsFiltradas, setPageAtual) => {
         setRowsFiltradas(rows);
     } else {
         const filtro = rows.filter((row) =>
-            row.descricao.toLowerCase().includes(buscaFiltrada.toLowerCase()) ||
+            row.nome.toLowerCase().includes(buscaFiltrada.toLowerCase()) ||
             row.categoria.toLowerCase().includes(buscaFiltrada.toLowerCase()) ||
             row.data.toLowerCase().includes(buscaFiltrada.toLowerCase())
         );
