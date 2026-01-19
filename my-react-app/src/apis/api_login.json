@@ -1,6 +1,7 @@
 [
     {
         "login": "admin",
-        "senha": "password"
+        "senha": "password",
+        "criado-em": "2025/12/10"
     }
 ]

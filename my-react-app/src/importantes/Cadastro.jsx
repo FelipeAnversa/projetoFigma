@@ -1,6 +1,7 @@
 import { TextField, Button, Alert, Snackbar } from '@mui/material';
 import { useState } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { postCriarConta } from '../visual/services/post/postCriarConta';
 
 export default function Cadastro({ dadosLogin, onCadastroSucesso }) {
     const [usuario, setUsuario] = useState('');
@@ -21,17 +22,27 @@ export default function Cadastro({ dadosLogin, onCadastroSucesso }) {
         setSucesso('');
     };
 
+    function ComponenteData() {
+        const dataAtual = new Date();
+        const dia = String(dataAtual.getDate()).padStart(2, '0');
+        const mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
+        const ano = dataAtual.getFullYear();
+        return `${dia}/${mes}/${ano}`;
+    }
+
     const cadastrar = () => {
         const usuarioExistente = dadosLogin.find((item) => item.login === usuario);
         if (usuarioExistente) {
             setErro('Usuário já existe.');
             setSucesso('');
         } else {
-            const novoUsuario = { login: usuario, senha: senha };
+            const dataFormatada = ComponenteData();
+            const novoUsuario = { login: usuario, senha: senha, 'criado-em': dataFormatada };
             const novosDados = [...dadosLogin, novoUsuario];
             
             onCadastroSucesso(novosDados);
-            
+            postCriarConta(usuario, senha, dataFormatada);
+
             setSucesso('Cadastro realizado com sucesso!');
             setErro('');
             

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { Button, TextField, Stack, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { theme } from './theme';
+import { postTransacoes } from '../visual/services/post/postTransacoes';
 
 export default function Transacao({ setValorEntradas, setValorSaidas, setRows }) {
     const [open, setOpen] = useState(false);
@@ -58,6 +59,7 @@ export default function Transacao({ setValorEntradas, setValorSaidas, setRows })
         
         const dataFormatada = ComponenteData();
         const novaTransacao = createData(nome, precoParaTabela, categoria, tipoTransacao, dataFormatada);
+        postTransacoes(nome, valorNumerico, categoria, tipoTransacao);
         setRows(prevRows => [...prevRows, novaTransacao]);
         
         handleClose();
