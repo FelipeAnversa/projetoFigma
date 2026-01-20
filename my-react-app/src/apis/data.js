@@ -1,92 +1,29 @@
-export const data = [
-    {
-        id: 12,
-        usuario_id: 2,
-        nome: "teste",
-        valor: 0,
-        categoria: "teste",
-        tipo: "saida",
-        data: "2025/12/10",
-    },
-    {
-        id: 13,
-        usuario_id: 2,
-        nome: "teste",
-        valor: 0,
-        categoria: "teste",
-        tipo: "saida",
-        data: "2025/12/10",
-    },
-    {
-        id: 11,
-        usuario_id: 2,
-        nome: "teste",
-        valor: 0,
-        categoria: "teste",
-        tipo: "saida",
-        data: "2025/12/10",
-    },
-    {
-        id: 9,
-        usuario_id: 2,
-        nome: "teste",
-        valor: 0,
-        categoria: "teste",
-        tipo: "saida",
-        data: "2025/12/10",
-    },
-    {
-        id: 10,
-        usuario_id: 2,
-        nome: "teste",
-        valor: 0,
-        categoria: "teste",
-        tipo: "saida",
-        data: "2025/12/10",
-    },
-    {
-        id: 8,
-        usuario_id: 2,
-        nome: "teste",
-        valor: 0,
-        categoria: "teste",
-        tipo: "saida",
-        data: "2025/12/10",
-    },
-    {
-        id: 6,
-        usuario_id: 2,
-        nome: "teste",
-        valor: 0,
-        categoria: "teste",
-        tipo: "saida",
-        data: "2025/12/10",
-    },
-    {
-        id: 7,
-        usuario_id: 2,
-        nome: "teste",
-        valor: 0,
-        categoria: "teste",
-        tipo: "saida",
-        data: "2025/12/10",
-    },
-    {
-        id: 4,
-        usuario_id: 2,
-        nome: "teste",
-        valor: 0,
-        categoria: "teste",
-        tipo: "saida",
-        data: "2025/12/10",
-    },
-    {
-        id: 5,
-        usuario_id: 2,
-        nome: "teste",
-        valor: 0,
-        categoria: "teste",
-        tipo: "saida",
-        data: "2025/12/10",
-    },
-];
+import api from './api.js';
+
+let dadosExportados = [];
+
+const inicializarDados = async () => {
+    try {
+        const response = await api.get('/api/transacoes');
+        dadosExportados = response.data.transacoes.map(item => ({
+            id: item.id,
+            usuario_id: item.usuario_id,
+            nome: item.nome,
+            valor: item.valor / 100,
+            categoria: item.categoria,
+            tipo: item.tipo,
+            data: item.data
+        }));
+        
+        console.log(dadosExportados);
+    } catch (error) {
+        console.error(error);
+        dadosExportados = [];
+    }
+};
+inicializarDados();
+export const data = dadosExportados;
+export const recarregarDados = async () => {
+    await inicializarDados();
+    return dadosExportados;
+};

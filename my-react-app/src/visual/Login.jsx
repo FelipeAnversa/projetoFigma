@@ -1,10 +1,11 @@
 import { Box, Typography, TextField, Button, Stack, Alert, Snackbar, Card } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from '../importantes/theme';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import api from "../apis/api_login.json"
 import Cadastro from '../importantes/Cadastro';
 import Pagina from './Pagina';
+import { getInfo } from './services/get/getInfo';
 
 export default function Login() {
     const [usuario, setUsuario] = useState('');
@@ -33,6 +34,11 @@ export default function Login() {
         setDadosLogin([...novosDados]);
         setSucesso('Cadastro realizado com sucesso! Agora faça login.');
     };
+
+    useEffect(() => {
+        getInfo();
+        
+    }, []);
 
     if (logado) {
         return <Pagina />;

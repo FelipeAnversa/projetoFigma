@@ -3,6 +3,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { Button, TextField, Stack, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { theme } from './theme';
 import { postTransacoes } from '../visual/services/post/postTransacoes';
+import { getTransacoes } from '../visual/services/get/getTransacoes';
 
 export default function Transacao({ setValorEntradas, setValorSaidas, setRows }) {
     const [open, setOpen] = useState(false);
@@ -61,7 +62,7 @@ export default function Transacao({ setValorEntradas, setValorSaidas, setRows })
         const novaTransacao = createData(nome, precoParaTabela, categoria, tipoTransacao, dataFormatada);
         postTransacoes(nome, valorNumerico, categoria, tipoTransacao);
         setRows(prevRows => [...prevRows, novaTransacao]);
-        
+        getTransacoes().then(updatedRows => setRows(updatedRows));
         handleClose();
     };
     

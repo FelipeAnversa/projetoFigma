@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { Box, Stack, Typography, CardContent, Card } from '@mui/material';
-import { useState , useMemo } from 'react';
+import { useState , useMemo , useEffect } from 'react';
 import { theme } from '../importantes/theme';
 import Transacao from '../importantes/Transacao';
 import Cards from '../importantes/Cards';
@@ -8,6 +8,7 @@ import Paginacao from '../importantes/Paginacao';
 import Filtrar from '../importantes/Filtrar';
 import Tabela from '../importantes/Tabela';
 import { data } from '../apis/data';
+import { getTransacoes } from '../visual/services/get/getTransacoes';
 
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
@@ -17,7 +18,7 @@ export default function Pagina() {
     const [valorEntradas, setValorEntradas] = useState(0);
     const [valorSaidas, setValorSaidas] = useState(0);
     const valorTotal = valorEntradas - valorSaidas;
-    const dados = data;
+    const dados = data; // AQUI PORRRA
     const [rows, setRows] = useState([...dados]);
     const [busca, setBusca] = useState('');
     const [buscaFiltrada, setBuscaFiltrada] = useState('');
@@ -31,6 +32,17 @@ export default function Pagina() {
         const endIndex = startIndex + itemsPorPagina;
         return rowsFiltradas.slice(startIndex, endIndex);
     }, [rowsFiltradas, pageAtual, itemsPorPagina]);
+
+    useEffect(() => {
+        const fetchTransacoes = async () => {
+            const transacoes = await getTransacoes();
+            if (transacoes && Array.isArray(transacoes)) {
+                setRows(transacoes);
+                setRowsFiltradas(transacoes);
+            }
+        };
+        fetchTransacoes();
+    }, []);
 
     const entradas = (
         <CardContent>
