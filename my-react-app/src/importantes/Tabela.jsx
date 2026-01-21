@@ -4,7 +4,17 @@ import { theme } from './theme';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteTransacoes } from '../visual/services/delete/deleteTransacoes';
 
-export default function Tabela({ rowsFiltradas , setRows }) {
+export default function Tabela({ rowsFiltradas , setRows , setValorEntradas , setValorSaidas }) {
+    function formatarData(dataString) {
+        const [dataPart] = dataString.split(' ');
+        return dataPart.replace(/-/g, '/');
+    }
+    function formatarValor(valor, tipo) {
+        if (tipo === 'saida') {
+            return `R$ - ${Math.abs(valor).toFixed(2)}`;
+        }
+        return `R$ ${valor.toFixed(2)}`;
+    }
     return (
         <ThemeProvider theme={theme}>
             <Stack
@@ -38,15 +48,15 @@ export default function Tabela({ rowsFiltradas , setRows }) {
                                 width: '20%', 
                                 color: row.tipo === 'entrada' ? 'success.main' : 'error.main' 
                             }}
-                        >R$ {row.valor.toFixed(2)}
+                        >{formatarValor(row.valor, row.tipo)}
                         </Box>
                         <Box sx={{ width: '25%', color: 'grey.600' }} align='center'>
                             {row.categoria}
                         </Box>
-                        <Box sx={{ width: '15%', color: 'grey.600' }} align='right'>
-                            {row.data}
+                        <Box sx={{ width: '15%', color: 'grey.600' }} align='center'>
+                            {formatarData(row.data)}
                         </Box>
-                        <DeleteIcon sx={{ color: 'error.main', marginLeft: '10px', cursor: 'pointer' }} onClick={() => deleteTransacoes(row.id, setRows)}/>
+                        <DeleteIcon sx={{ color: 'error.main', marginLeft: '10px', cursor: 'pointer' }} onClick={() => deleteTransacoes(row.id, row.valor, row.tipo, setRows, setValorEntradas, setValorSaidas)}/>
                     </Stack>
                 ))}
                 </Stack>

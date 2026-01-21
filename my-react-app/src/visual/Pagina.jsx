@@ -9,6 +9,7 @@ import Filtrar from '../importantes/Filtrar';
 import Tabela from '../importantes/Tabela';
 import { data } from '../apis/data';
 import { getTransacoes } from '../visual/services/get/getTransacoes';
+import { paginacaoAPI } from '../apis/paginacaoAPI';
 
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
@@ -222,7 +223,7 @@ export default function Pagina() {
                             marginBottom: '5rem',
                         }}
                     >
-                        <Tabela rowsFiltradas={dadosPaginaAtual} setRows={setRows} />
+                        <Tabela rowsFiltradas={dadosPaginaAtual} setRows={setRows} setValorEntradas={setValorEntradas} setValorSaidas={setValorSaidas} />
                     </Stack>
                     <Paginacao 
                         totalPaginas={totalPaginas}
