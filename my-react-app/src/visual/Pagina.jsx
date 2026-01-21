@@ -17,7 +17,6 @@ import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 export default function Pagina() {
     const [valorEntradas, setValorEntradas] = useState(0);
     const [valorSaidas, setValorSaidas] = useState(0);
-    const valorTotal = valorEntradas - valorSaidas;
     const [dados, setDados] = useState([]);
     const [rows, setRows] = useState([...dados]);
     const [busca, setBusca] = useState('');
@@ -30,7 +29,14 @@ export default function Pagina() {
     const dadosPaginaAtual = useMemo(() => {
         const startIndex = (pageAtual - 1) * itemsPorPagina;
         const endIndex = startIndex + itemsPorPagina;
-        return rowsFiltradas.slice(startIndex, endIndex);
+        if (Array.isArray(rowsFiltradas)) {
+            return rowsFiltradas.slice(startIndex, endIndex);
+        } else if (rowsFiltradas && rowsFiltradas.transacoes) {
+            return rowsFiltradas.transacoes.slice(startIndex, endIndex);
+        } else {
+            console.error("rowsFiltradas não tem formato esperado:", rowsFiltradas);
+            return [];
+        }
     }, [rowsFiltradas, pageAtual, itemsPorPagina]);
 
     useEffect(() => {
@@ -110,7 +116,7 @@ export default function Pagina() {
                 <AttachMoneyIcon />
             </Stack>
             <Typography variant="h5" component="div">
-                <b>{valorTotal ? `R$ ${valorTotal.toFixed(2)}` : 'R$ 0.00'}</b>
+                <b>{(valorEntradas - valorSaidas) ? `R$ ${(valorEntradas - valorSaidas).toFixed(2)}` : 'R$ 0.00'}</b>
             </Typography>
         </CardContent>
     );
@@ -216,7 +222,7 @@ export default function Pagina() {
                             marginBottom: '5rem',
                         }}
                     >
-                        <Tabela rowsFiltradas={dadosPaginaAtual} />
+                        <Tabela rowsFiltradas={dadosPaginaAtual} setRows={setRows} />
                     </Stack>
                     <Paginacao 
                         totalPaginas={totalPaginas}

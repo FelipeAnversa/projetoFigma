@@ -61,7 +61,10 @@ export default function Transacao({ setValorEntradas, setValorSaidas, setRows })
         const dataFormatada = ComponenteData();
         const novaTransacao = createData(nome, precoParaTabela, categoria, tipoTransacao, dataFormatada);
         postTransacoes(nome, valorNumerico, categoria, tipoTransacao);
-        setRows(prevRows => [...prevRows, novaTransacao]);
+        setRows(prevRows => {
+            const safePrevRows = Array.isArray(prevRows) ? prevRows : [];
+            return [...safePrevRows, novaTransacao || {}];
+        });
         getTransacoes().then(updatedRows => setRows(updatedRows));
         handleClose();
     };

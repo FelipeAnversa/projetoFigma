@@ -1,14 +1,15 @@
 import { Stack , Box , Paper } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { deleteTransacoes } from '../visual/services/delete/deleteTransacoes';
 
-export default function Tabela({ rowsFiltradas }) {
+export default function Tabela({ rowsFiltradas , setRows }) {
     return (
         <ThemeProvider theme={theme}>
             <Stack
                 component={Paper}
                 sx={{
-                    
                     fontFamily: 'Roboto, sans-serif',
                     p: 2,
                     display: 'flex',
@@ -35,7 +36,7 @@ export default function Tabela({ rowsFiltradas }) {
                         <Box 
                             sx={{ 
                                 width: '20%', 
-                                color: row.valor <= 0 ? 'error.main' : 'primary.light' 
+                                color: row.tipo === 'entrada' ? 'success.main' : 'error.main' 
                             }}
                         >R$ {row.valor.toFixed(2)}
                         </Box>
@@ -45,6 +46,7 @@ export default function Tabela({ rowsFiltradas }) {
                         <Box sx={{ width: '15%', color: 'grey.600' }} align='right'>
                             {row.data}
                         </Box>
+                        <DeleteIcon sx={{ color: 'error.main', marginLeft: '10px', cursor: 'pointer' }} onClick={() => deleteTransacoes(row.id, setRows)}/>
                     </Stack>
                 ))}
                 </Stack>
