@@ -23,9 +23,9 @@ export default function Pagina() {
     const [busca, setBusca] = useState('');
     const [buscaFiltrada, setBuscaFiltrada] = useState('');
     const [rowsFiltradas, setRowsFiltradas] = useState([]);
-    const [pageAtual, setPageAtual] = useState(1);
-    const itemsPorPagina = 8;
-    const totalPaginas = rowsFiltradas.length > 0 ? Math.ceil(rowsFiltradas.length / itemsPorPagina) : 1;
+    const [pageAtual, setPageAtual] = useState(paginacaoAPI().paginaAtual);
+    const itemsPorPagina = paginacaoAPI().limite;
+    const totalPaginas = paginacaoAPI().totalPaginas;
 
     const dadosPaginaAtual = useMemo(() => {
         const startIndex = (pageAtual - 1) * itemsPorPagina;

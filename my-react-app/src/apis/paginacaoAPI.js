@@ -1,4 +1,4 @@
-import api from '../../../apis/api';
+import api from './api.js';
 
 export async function paginacaoAPI() {
     try {
