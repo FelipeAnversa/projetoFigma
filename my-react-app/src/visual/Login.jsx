@@ -6,6 +6,7 @@ import api from "../apis/api_login.json"
 import Cadastro from '../importantes/Cadastro';
 import Pagina from './Pagina';
 import { getInfo } from './services/get/getInfo';
+import { postLogin } from './services/post/postLogin';
 
 export default function Login() {
     const [usuario, setUsuario] = useState('');
@@ -18,7 +19,8 @@ export default function Login() {
 
     const verificar = () => {
         const usuarioValido = dadosLogin.find((item) => item.login === usuario && item.senha === senha);
-        if (usuarioValido) {
+        const response = postLogin(usuario, senha);
+        if (usuarioValido || !response.error) {
             setSucesso('Login bem-sucedido!');
             setErro('');
             setTimeout(() => {
@@ -37,7 +39,6 @@ export default function Login() {
 
     useEffect(() => {
         getInfo();
-        
     }, []);
 
     if (logado) {

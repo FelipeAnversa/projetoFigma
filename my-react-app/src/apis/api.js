@@ -5,7 +5,7 @@ const api = axios.create({
     timeout: 10000,
 });
 
-const TOKEN_FIXO = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImlhdCI6MTc2ODkzMjQwNCwiZXhwIjoxNzY5MDE4ODA0fQ.xomGuy8AsBinP4OE9GFSIzNzCEN0tuSVhiSZUccqkok";
+const TOKEN_FIXO = localStorage.getItem('token');
 
 api.interceptors.request.use(
     (config) => {

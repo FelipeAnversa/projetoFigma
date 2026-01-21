@@ -6,6 +6,7 @@ export async function postLogin(login, senha) {
             "login": login,
             "senha": senha
         });
+        localStorage.setItem('token', response.data.token);
         console.log(response.data);
         return response.data;
     } catch (error) {

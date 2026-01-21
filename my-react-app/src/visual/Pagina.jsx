@@ -18,7 +18,7 @@ export default function Pagina() {
     const [valorEntradas, setValorEntradas] = useState(0);
     const [valorSaidas, setValorSaidas] = useState(0);
     const valorTotal = valorEntradas - valorSaidas;
-    const dados = data; // AQUI PORRRA
+    const [dados, setDados] = useState([]);
     const [rows, setRows] = useState([...dados]);
     const [busca, setBusca] = useState('');
     const [buscaFiltrada, setBuscaFiltrada] = useState('');
@@ -42,6 +42,26 @@ export default function Pagina() {
             }
         };
         fetchTransacoes();
+    }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const dadosAPI = await data();
+            setDados(dadosAPI);
+            setRows(dadosAPI);
+            setRowsFiltradas(dadosAPI);
+            setValorEntradas(
+                dadosAPI
+                    .filter(item => item.tipo === 'entrada')
+                    .reduce((acc, item) => acc + item.valor, 0)
+            );
+            setValorSaidas(
+                dadosAPI
+                    .filter(item => item.tipo === 'saida')
+                    .reduce((acc, item) => acc + item.valor, 0)
+            );
+        };
+        fetchData();
     }, []);
 
     const entradas = (
