@@ -4,7 +4,7 @@ import { theme } from './theme';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteTransacoes } from '../visual/services/delete/deleteTransacoes';
 
-export default function Tabela({ rowsFiltradas , setRows , setValorEntradas , setValorSaidas }) {
+export default function Tabela({ rowsFiltradas , setRows , setValorEntradas , setValorSaidas , setValorTotal }) {
     function formatarData(dataString) {
         const [dataPart] = dataString.split(' ');
         return dataPart.replace(/-/g, '/');
@@ -21,7 +21,6 @@ export default function Tabela({ rowsFiltradas , setRows , setValorEntradas , se
                 component={Paper}
                 sx={{
                     fontFamily: 'Roboto, sans-serif',
-                    p: 2,
                     display: 'flex',
                     gap: '10px'
                 }}
@@ -56,7 +55,7 @@ export default function Tabela({ rowsFiltradas , setRows , setValorEntradas , se
                         <Box sx={{ width: '15%', color: 'grey.600' }} align='center'>
                             {formatarData(row.data)}
                         </Box>
-                        <DeleteIcon sx={{ color: 'error.main', marginLeft: '10px', cursor: 'pointer' }} onClick={() => deleteTransacoes(row.id, row.valor, row.tipo, setRows, setValorEntradas, setValorSaidas)}/>
+                        <DeleteIcon sx={{ color: 'error.main', marginLeft: '10px', cursor: 'pointer' }} onClick={() => deleteTransacoes(row.id, setRows, setValorEntradas, setValorSaidas, setValorTotal)}/>
                     </Stack>
                 ))}
                 </Stack>

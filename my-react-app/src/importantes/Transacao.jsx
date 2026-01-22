@@ -4,8 +4,9 @@ import { Button, TextField, Stack, Dialog, DialogActions, DialogContent, DialogT
 import { theme } from './theme';
 import { postTransacoes } from '../visual/services/post/postTransacoes';
 import { getTransacoes } from '../visual/services/get/getTransacoes';
+import { valorAPI } from '../apis/valorAPI';
 
-export default function Transacao({ setValorEntradas, setValorSaidas, setRows }) {
+export default function Transacao({ setRows , setValorEntradas , setValorSaidas , setValorTotal }) {
     const [open, setOpen] = useState(false);
     const [nome, setNome] = useState('');
     const [valor, setValor] = useState('');
@@ -43,9 +44,8 @@ export default function Transacao({ setValorEntradas, setValorSaidas, setRows })
         setTipoTransacao('entrada');
     };
     
-    const handleCadastrar = () => {
+    const handleCadastrar = async () => {
         const valorNumerico = parseFloat(valor);
-        const precoParaTabela = tipoTransacao === 'saida' ? -valorNumerico : valorNumerico;
         
         if (isNaN(valorNumerico) || valorNumerico <= 0) {
             alert('Por favor, insira um valor válido maior que zero');
@@ -54,18 +54,33 @@ export default function Transacao({ setValorEntradas, setValorSaidas, setRows })
         
         if (tipoTransacao === 'entrada') {
             setValorEntradas(prev => prev + valorNumerico);
+            setValorTotal(prev => prev + valorNumerico);
         } else {
             setValorSaidas(prev => prev + valorNumerico);
+            setValorTotal(prev => prev - valorNumerico);
         }
         
         const dataFormatada = ComponenteData();
+        const precoParaTabela = tipoTransacao === 'saida' ? -valorNumerico : valorNumerico;
         const novaTransacao = createData(nome, precoParaTabela, categoria, tipoTransacao, dataFormatada);
-        postTransacoes(nome, valorNumerico, categoria, tipoTransacao);
+        
+        await postTransacoes(nome, valorNumerico, categoria, tipoTransacao);
+        
+        const valorData = await valorAPI();
+        if (valorData && valorData.error !== true) {
+            setValorEntradas(valorData?.entradas || 0);
+            setValorSaidas(valorData?.saidas || 0);
+            setValorTotal(valorData?.total || 0);
+        }
+        
         setRows(prevRows => {
             const safePrevRows = Array.isArray(prevRows) ? prevRows : [];
             return [...safePrevRows, novaTransacao || {}];
         });
-        getTransacoes().then(updatedRows => setRows(updatedRows));
+        
+        const updatedRows = await getTransacoes();
+        setRows(updatedRows);
+        
         handleClose();
     };
     

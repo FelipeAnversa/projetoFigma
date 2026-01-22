@@ -10,6 +10,7 @@ import Tabela from '../importantes/Tabela';
 import { data } from '../apis/data';
 import { getTransacoes } from '../visual/services/get/getTransacoes';
 import { paginacaoAPI } from '../apis/paginacaoAPI';
+import { valorAPI } from '../apis/valorAPI';
 
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
@@ -18,17 +19,18 @@ import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 export default function Pagina() {
     const [valorEntradas, setValorEntradas] = useState(0);
     const [valorSaidas, setValorSaidas] = useState(0);
+    const [valorTotal, setValorTotal] = useState(0);
     const [dados, setDados] = useState([]);
     const [rows, setRows] = useState([...dados]);
     const [busca, setBusca] = useState('');
     const [buscaFiltrada, setBuscaFiltrada] = useState('');
     const [rowsFiltradas, setRowsFiltradas] = useState([]);
-    const [pageAtual, setPageAtual] = useState(paginacaoAPI().paginaAtual);
-    const itemsPorPagina = paginacaoAPI().limite;
-    const totalPaginas = paginacaoAPI().totalPaginas;
+    const [paginaAtual, setPaginaAtual] = useState(1);
+    const [itemsPorPagina, setItemsPorPagina] = useState(0);
+    const [totalPaginas, setTotalPaginas] = useState(0);
 
     const dadosPaginaAtual = useMemo(() => {
-        const startIndex = (pageAtual - 1) * itemsPorPagina;
+        const startIndex = (paginaAtual - 1) * itemsPorPagina;
         const endIndex = startIndex + itemsPorPagina;
         if (Array.isArray(rowsFiltradas)) {
             return rowsFiltradas.slice(startIndex, endIndex);
@@ -38,7 +40,31 @@ export default function Pagina() {
             console.error("rowsFiltradas não tem formato esperado:", rowsFiltradas);
             return [];
         }
-    }, [rowsFiltradas, pageAtual, itemsPorPagina]);
+    }, [rowsFiltradas, paginaAtual, itemsPorPagina]);
+
+    useEffect(() => {
+        async function fetchData() {
+            const data = await paginacaoAPI();
+            if (data && !data.error) {
+                setPaginaAtual(data.paginaAtual);
+                setItemsPorPagina(data.itemsPorPagina);
+                setTotalPaginas(data.totalPaginas);
+            }
+        }
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        async function fetchValor() {
+            const valorData = await valorAPI();
+            if (valorData && !valorData.error) {
+                setValorEntradas(valorData.entradas || 0);
+                setValorSaidas(valorData.saidas || 0);
+                setValorTotal(valorData.total || 0);
+            }
+        }
+        fetchValor();
+    }, []);
 
     useEffect(() => {
         const fetchTransacoes = async () => {
@@ -117,7 +143,7 @@ export default function Pagina() {
                 <AttachMoneyIcon />
             </Stack>
             <Typography variant="h5" component="div">
-                <b>{(valorEntradas - valorSaidas) ? `R$ ${(valorEntradas - valorSaidas).toFixed(2)}` : 'R$ 0.00'}</b>
+                <b>{(valorTotal) ? `R$ ${(valorTotal).toFixed(2)}` : 'R$ 0.00'}</b>
             </Typography>
         </CardContent>
     );
@@ -160,6 +186,7 @@ export default function Pagina() {
                         <Transacao 
                             setValorEntradas={setValorEntradas} 
                             setValorSaidas={setValorSaidas}
+                            setValorTotal={setValorTotal}
                             setRows={setRows}
                         />
                     </Stack>
@@ -198,7 +225,7 @@ export default function Pagina() {
                             flexDirection: 'row',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            marginTop: '2rem',
+                            marginTop: '1rem',
                         }}
                     >
                         
@@ -209,26 +236,26 @@ export default function Pagina() {
                         setBuscaFiltrada={setBuscaFiltrada}
                         busca={busca}
                         setBusca={setBusca}
-                        setPageAtual={setPageAtual}
+                        setPaginaAtual={setPaginaAtual}
                     />
 
                     </Stack>
 
                     <Stack
                         sx={{
-                            marginTop: '3rem',
+                            marginTop: '1.2rem',
                             marginLeft: 'auto',
                             marginRight: 'auto',
                             width: '85vw',
                             marginBottom: '5rem',
                         }}
                     >
-                        <Tabela rowsFiltradas={dadosPaginaAtual} setRows={setRows} setValorEntradas={setValorEntradas} setValorSaidas={setValorSaidas} />
+                        <Tabela rowsFiltradas={dadosPaginaAtual} setRows={setRows} setValorEntradas={setValorEntradas} setValorSaidas={setValorSaidas} setValorTotal={setValorTotal} />
                     </Stack>
                     <Paginacao 
                         totalPaginas={totalPaginas}
-                        pageAtual={pageAtual}
-                        setPageAtual={setPageAtual}
+                        paginaAtual={paginaAtual}
+                        setPaginaAtual={setPaginaAtual}
                     />
                 </Box>
             </Stack>

@@ -4,10 +4,10 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme';
 import SearchIcon from '@mui/icons-material/Search';
 
-export default function Filtrar({ buscaFiltrada, rows, setRowsFiltradas, setBuscaFiltrada, busca, setBusca, setPageAtual }) {
+export default function Filtrar({ buscaFiltrada, rows, setRowsFiltradas, setBuscaFiltrada, busca, setBusca, setPaginaAtual }) {
     useEffect(() => {
-        filtrar(buscaFiltrada, rows, setRowsFiltradas, setPageAtual);
-    }, [buscaFiltrada, rows, setRowsFiltradas, filtrar, setPageAtual]);
+        filtrar(buscaFiltrada, rows, setRowsFiltradas, setPaginaAtual);
+    }, [buscaFiltrada, rows, setRowsFiltradas, filtrar, setPaginaAtual]);
     
     return (
         <ThemeProvider theme={theme}>
@@ -40,7 +40,7 @@ export default function Filtrar({ buscaFiltrada, rows, setRowsFiltradas, setBusc
     );
 }
 
-const filtrar = (buscaFiltrada, rows, setRowsFiltradas, setPageAtual) => {
+const filtrar = (buscaFiltrada, rows, setRowsFiltradas, setPaginaAtual) => {
     if (buscaFiltrada === '' || buscaFiltrada === null) {
         setRowsFiltradas(rows);
     } else {
@@ -50,6 +50,6 @@ const filtrar = (buscaFiltrada, rows, setRowsFiltradas, setPageAtual) => {
             row.data.toLowerCase().includes(buscaFiltrada.toLowerCase())
         );
         setRowsFiltradas(filtro);
-        setPageAtual(1);
+        setPaginaAtual(1);
     }
 };

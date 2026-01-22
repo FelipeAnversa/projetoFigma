@@ -2,9 +2,9 @@ import { Box , Pagination } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme';
 
-export default function Paginacao({ pageAtual, setPageAtual, totalPaginas }) {
+export default function Paginacao({ paginaAtual, setPaginaAtual, totalPaginas }) {
     const handleChange = (event, value) => {
-        setPageAtual(value);
+        setPaginaAtual(value);
     }
 
     return (
@@ -27,7 +27,7 @@ export default function Paginacao({ pageAtual, setPageAtual, totalPaginas }) {
             >
                 <Pagination
                     count={totalPaginas}
-                    page={pageAtual}
+                    page={paginaAtual}
                     onChange={handleChange}
                     shape="rounded"
                     sx={{
