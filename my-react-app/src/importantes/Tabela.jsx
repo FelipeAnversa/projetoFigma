@@ -3,8 +3,9 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteTransacoes } from '../visual/services/delete/deleteTransacoes';
+import { useMemo } from 'react';
 
-export default function Tabela({ rowsFiltradas , setRows , setValorEntradas , setValorSaidas , setValorTotal }) {
+export default function Tabela({ rowsFiltradas , itemsPorPagina , paginaAtual , setRows , setValorEntradas , setValorSaidas , setValorTotal }) {
     function formatarData(dataString) {
         const [dataPart] = dataString.split(' ');
         return dataPart.replace(/-/g, '/');
@@ -15,6 +16,29 @@ export default function Tabela({ rowsFiltradas , setRows , setValorEntradas , se
         }
         return `R$ ${valor.toFixed(2)}`;
     }
+
+
+    
+    const dadosPaginaAtual = useMemo(() => {
+        const startIndex = (paginaAtual - 1) * itemsPorPagina;
+        //console.log("Start Index:", startIndex);
+        const endIndex = startIndex + itemsPorPagina;
+        //console.log("End Index:", endIndex);
+        let arrayParaPaginacao = null;
+        if (rowsFiltradas && Array.isArray(rowsFiltradas)) {
+            arrayParaPaginacao = rowsFiltradas;
+        } else if (Array.isArray(rowsFiltradas)) {
+            arrayParaPaginacao = rowsFiltradas;
+        }
+        if (!arrayParaPaginacao) {
+            console.error("rowsFiltradas não tem formato esperado:", rowsFiltradas);
+            return [];
+        }
+        console.log("Array para paginação:", arrayParaPaginacao);
+        console.log(arrayParaPaginacao.slice(startIndex, endIndex));
+        return arrayParaPaginacao.slice(startIndex, endIndex);
+    }, [rowsFiltradas, paginaAtual, itemsPorPagina]);
+
     return (
         <ThemeProvider theme={theme}>
             <Stack
@@ -25,7 +49,7 @@ export default function Tabela({ rowsFiltradas , setRows , setValorEntradas , se
                     gap: '10px'
                 }}
                 >
-                {rowsFiltradas.map((row) => (
+                {dadosPaginaAtual.map((row) => (
                     <Stack
                         key={row.id}
                         direction="row"

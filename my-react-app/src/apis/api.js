@@ -7,6 +7,8 @@ const api = axios.create({
 
 const TOKEN_FIXO = localStorage.getItem('token');
 
+api.defaults.headers.common['Authorization'] = `Bearer ${TOKEN_FIXO}`;
+
 api.interceptors.request.use(
     (config) => {
         config.headers.Authorization = `Bearer ${TOKEN_FIXO}`;

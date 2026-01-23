@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { Box, Stack, Typography, CardContent, Card } from '@mui/material';
-import { useState , useMemo , useEffect } from 'react';
+import { useState , useEffect } from 'react';
 import { theme } from '../importantes/theme';
 import Transacao from '../importantes/Transacao';
 import Cards from '../importantes/Cards';
@@ -28,20 +28,8 @@ export default function Pagina() {
     const [paginaAtual, setPaginaAtual] = useState(1);
     const [itemsPorPagina, setItemsPorPagina] = useState(0);
     const [totalPaginas, setTotalPaginas] = useState(0);
-
-    const dadosPaginaAtual = useMemo(() => {
-        const startIndex = (paginaAtual - 1) * itemsPorPagina;
-        const endIndex = startIndex + itemsPorPagina;
-        if (Array.isArray(rowsFiltradas)) {
-            return rowsFiltradas.slice(startIndex, endIndex);
-        } else if (rowsFiltradas && rowsFiltradas.transacoes) {
-            return rowsFiltradas.transacoes.slice(startIndex, endIndex);
-        } else {
-            console.error("rowsFiltradas não tem formato esperado:", rowsFiltradas);
-            return [];
-        }
-    }, [rowsFiltradas, paginaAtual, itemsPorPagina]);
-
+    console.log("Start:", ((paginaAtual - 1) * itemsPorPagina));
+    console.log("End:", (paginaAtual * itemsPorPagina));
     useEffect(() => {
         async function fetchData() {
             const data = await paginacaoAPI();
@@ -147,7 +135,7 @@ export default function Pagina() {
             </Typography>
         </CardContent>
     );
-
+    console.log("Renderizando Tabela com rowsFiltradas (Pagina.jsx):", rowsFiltradas);
     return (
         <ThemeProvider theme={theme}>
             <Stack
@@ -250,7 +238,7 @@ export default function Pagina() {
                             marginBottom: '5rem',
                         }}
                     >
-                        <Tabela rowsFiltradas={dadosPaginaAtual} setRows={setRows} setValorEntradas={setValorEntradas} setValorSaidas={setValorSaidas} setValorTotal={setValorTotal} />
+                        <Tabela rowsFiltradas={rowsFiltradas} itemsPorPagina={itemsPorPagina} paginaAtual={paginaAtual} setRows={setRows} setValorEntradas={setValorEntradas} setValorSaidas={setValorSaidas} setValorTotal={setValorTotal} />
                     </Stack>
                     <Paginacao 
                         totalPaginas={totalPaginas}
