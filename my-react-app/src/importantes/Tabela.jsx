@@ -16,27 +16,16 @@ export default function Tabela({ rowsFiltradas , itemsPorPagina , paginaAtual , 
         }
         return `R$ ${valor.toFixed(2)}`;
     }
-
-
     
     const dadosPaginaAtual = useMemo(() => {
         const startIndex = (paginaAtual - 1) * itemsPorPagina;
-        //console.log("Start Index:", startIndex);
         const endIndex = startIndex + itemsPorPagina;
-        //console.log("End Index:", endIndex);
-        let arrayParaPaginacao = null;
-        if (rowsFiltradas && Array.isArray(rowsFiltradas)) {
-            arrayParaPaginacao = rowsFiltradas;
-        } else if (Array.isArray(rowsFiltradas)) {
-            arrayParaPaginacao = rowsFiltradas;
-        }
-        if (!arrayParaPaginacao) {
+        const transacoesArray = rowsFiltradas?.transacoes || rowsFiltradas || [];                           
+        if (!Array.isArray(transacoesArray)) {
             console.error("rowsFiltradas não tem formato esperado:", rowsFiltradas);
             return [];
         }
-        console.log("Array para paginação:", arrayParaPaginacao);
-        console.log(arrayParaPaginacao.slice(startIndex, endIndex));
-        return arrayParaPaginacao.slice(startIndex, endIndex);
+        return transacoesArray.slice(startIndex, endIndex);
     }, [rowsFiltradas, paginaAtual, itemsPorPagina]);
 
     return (

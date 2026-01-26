@@ -41,13 +41,14 @@ export default function Filtrar({ buscaFiltrada, rows, setRowsFiltradas, setBusc
 }
 
 const filtrar = (buscaFiltrada, rows, setRowsFiltradas, setPaginaAtual) => {
-    if (buscaFiltrada === '' || buscaFiltrada === null) {
-        setRowsFiltradas(rows);
+    const rowsArray = Array.isArray(rows) ? rows : [];
+    if (!buscaFiltrada || buscaFiltrada.trim() === '') {
+        setRowsFiltradas(rowsArray);
     } else {
-        const filtro = rows.filter((row) =>
-            row.nome.toLowerCase().includes(buscaFiltrada.toLowerCase()) ||
-            row.categoria.toLowerCase().includes(buscaFiltrada.toLowerCase()) ||
-            row.data.toLowerCase().includes(buscaFiltrada.toLowerCase())
+        const filtro = rowsArray.filter((row) =>
+            row.nome?.toLowerCase().includes(buscaFiltrada.toLowerCase()) ||
+            row.categoria?.toLowerCase().includes(buscaFiltrada.toLowerCase()) ||
+            row.data?.toLowerCase().includes(buscaFiltrada.toLowerCase())
         );
         setRowsFiltradas(filtro);
         setPaginaAtual(1);

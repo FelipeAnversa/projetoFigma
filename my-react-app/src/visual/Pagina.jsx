@@ -20,22 +20,29 @@ export default function Pagina() {
     const [valorEntradas, setValorEntradas] = useState(0);
     const [valorSaidas, setValorSaidas] = useState(0);
     const [valorTotal, setValorTotal] = useState(0);
-    const [dados, setDados] = useState([]);
-    const [rows, setRows] = useState([...dados]);
+    const [rows, setRows] = useState([]);
     const [busca, setBusca] = useState('');
     const [buscaFiltrada, setBuscaFiltrada] = useState('');
     const [rowsFiltradas, setRowsFiltradas] = useState([]);
     const [paginaAtual, setPaginaAtual] = useState(1);
-    const [itemsPorPagina, setItemsPorPagina] = useState(0);
-    const [totalPaginas, setTotalPaginas] = useState(0);
+    const [itemsPorPagina, setItemsPorPagina] = useState(10);
+    const [totalPaginas, setTotalPaginas] = useState(1);
     
     useEffect(() => {
         async function fetchData() {
-            const data = await paginacaoAPI();
-            if (data && !data.error) {
-                setPaginaAtual(data.paginaAtual);
-                setItemsPorPagina(data.itemsPorPagina);
-                setTotalPaginas(data.totalPaginas);
+            try {
+                const data = await paginacaoAPI();
+                if (data?.paginaAtual && !isNaN(data.paginaAtual)) {
+                    setPaginaAtual(Number(data.paginaAtual));
+                }
+                if (data?.itemsPorPagina && !isNaN(data.itemsPorPagina)) {
+                    setItemsPorPagina(Number(data.itemsPorPagina));
+                }
+                if (data?.totalPaginas && !isNaN(data.totalPaginas)) {
+                    setTotalPaginas(Number(data.totalPaginas));
+                }
+            } catch (error) {
+                console.error("Erro na paginação:", error);
             }
         }
         fetchData();
@@ -67,7 +74,6 @@ export default function Pagina() {
     useEffect(() => {
         const fetchData = async () => {
             const dadosAPI = await data();
-            setDados(dadosAPI);
             setRows(dadosAPI);
             setRowsFiltradas(dadosAPI);
             setValorEntradas(
@@ -134,7 +140,6 @@ export default function Pagina() {
             </Typography>
         </CardContent>
     );
-    console.log("Renderizando Tabela com rowsFiltradas (Pagina.jsx):", rowsFiltradas);
     return (
         <ThemeProvider theme={theme}>
             <Stack
