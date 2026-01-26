@@ -24,6 +24,9 @@ export default function Filtrar({ buscaFiltrada, rows, setRowsFiltradas, setBusc
                     '& .MuiFilledInput-underline:after': { 
                         borderBottomColor: 'primary.main' 
                     },
+                    '.MuiFilledInput-root.Mui-focused': {
+                        bgcolor: 'grey.50',
+                    }
                 }}
             />
             <Button 

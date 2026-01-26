@@ -156,7 +156,7 @@ export default function Pagina() {
                     sx={{
                         backgroundColor: 'grey.50',
                         color: 'grey.600',
-                        height: '20vh',
+                        height: '16vh',
                         width: '100%',
                         display: 'flex',
                         justifyContent: 'center',
@@ -169,6 +169,8 @@ export default function Pagina() {
                     <Stack
                         direction="row"
                         sx={{
+                            marginTop: '0',
+                            marginBottom: '2rem',
                             width: '90vw',
                             justifyContent: 'space-between',
                             alignItems: 'center',
@@ -206,9 +208,9 @@ export default function Pagina() {
 
                 <Box
                     sx={{
-                        marginTop: '20vh',
-                        paddingTop: '3rem',
-                        minHeight: 'calc(100vh - 20vh)',
+                        marginTop: '15vh',
+                        paddingTop: '1rem',
+                        minHeight: '100vh',
                     }}
                 >
                     <Stack
@@ -217,7 +219,7 @@ export default function Pagina() {
                             flexDirection: 'row',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            marginTop: '1rem',
+                            marginTop: '3rem', // AQUI
                         }}
                     >
                         
