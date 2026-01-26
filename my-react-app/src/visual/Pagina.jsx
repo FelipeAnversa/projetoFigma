@@ -28,8 +28,7 @@ export default function Pagina() {
     const [paginaAtual, setPaginaAtual] = useState(1);
     const [itemsPorPagina, setItemsPorPagina] = useState(0);
     const [totalPaginas, setTotalPaginas] = useState(0);
-    console.log("Start:", ((paginaAtual - 1) * itemsPorPagina));
-    console.log("End:", (paginaAtual * itemsPorPagina));
+    
     useEffect(() => {
         async function fetchData() {
             const data = await paginacaoAPI();
