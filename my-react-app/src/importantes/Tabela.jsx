@@ -10,11 +10,34 @@ export default function Tabela({ rowsFiltradas , itemsPorPagina , paginaAtual , 
         const [dataPart] = dataString.split(' ');
         return dataPart.replace(/-/g, '/');
     }
-    function formatarValor(valor, tipo) {
-        if (tipo === 'saida') {
-            return `R$ - ${Math.abs(valor).toFixed(2)}`;
+    function formatarValor(valor) {
+        if (typeof valor === 'string') {
+            const limpo = valor
+                .replace('R$', '')
+                .replace(/\./g, '')
+                .replace(',', '.')
+                .trim();
+            
+            const numero = parseFloat(limpo);
+            if (!isNaN(numero)) {
+                return numero.toLocaleString('pt-BR', { 
+                    style: 'currency', 
+                    currency: 'BRL' 
+                });
+            }
         }
-        return `R$ ${valor.toFixed(2)}`;
+        if (typeof valor === 'number') {
+            return valor.toLocaleString('pt-BR', { 
+                style: 'currency', 
+                currency: 'BRL' 
+            });
+        }
+        return valor;
+    }
+
+    function adicionarSinal(valor, tipo) {
+        const valorFormatado = formatarValor(valor);
+        return tipo === 'entrada' ? `+ ${valorFormatado}` : `- ${valorFormatado}`;
     }
     
     const dadosPaginaAtual = useMemo(() => {
@@ -60,7 +83,7 @@ export default function Tabela({ rowsFiltradas , itemsPorPagina , paginaAtual , 
                                 width: '20%', 
                                 color: row.tipo === 'entrada' ? 'success.main' : 'error.main' 
                             }}
-                        >{formatarValor(row.valor, row.tipo)}
+                        >{adicionarSinal(row.valor, row.tipo)}
                         </Box>
                         <Box sx={{ width: '25%', color: 'grey.600' }} align='center'>
                             {row.categoria}

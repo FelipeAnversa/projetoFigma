@@ -90,6 +90,31 @@ export default function Pagina() {
         fetchData();
     }, []);
 
+    function formatarValor(valor) {
+        if (typeof valor === 'string') {
+            const limpo = valor
+                .replace('R$', '')
+                .replace(/\./g, '')
+                .replace(',', '.')
+                .trim();
+            
+            const numero = parseFloat(limpo);
+            if (!isNaN(numero)) {
+                return numero.toLocaleString('pt-BR', { 
+                    style: 'currency', 
+                    currency: 'BRL' 
+                });
+            }
+        }
+        if (typeof valor === 'number') {
+            return valor.toLocaleString('pt-BR', { 
+                style: 'currency', 
+                currency: 'BRL' 
+            });
+        }
+        return valor;
+    }
+
     const entradas = (
         <CardContent>
             <Stack
@@ -102,7 +127,7 @@ export default function Pagina() {
                 <ArrowCircleUpIcon color="success"/>
             </Stack>
             <Typography variant="h5" component="div">
-                <b>{valorEntradas ? `R$ ${valorEntradas.toFixed(2)}` : 'R$ 0.00'}</b>
+                <b>{formatarValor(valorEntradas)}</b>
             </Typography>
         </CardContent>
     );
@@ -119,7 +144,7 @@ export default function Pagina() {
                 <ArrowCircleDownIcon sx={{ color: "error.main" }}/>
             </Stack>
             <Typography variant="h5" component="div">
-                <b>{valorSaidas ? `R$ ${valorSaidas.toFixed(2)}` : 'R$ 0.00'}</b>
+                <b>{formatarValor(valorSaidas)}</b>
             </Typography>
         </CardContent>
     );
@@ -136,7 +161,7 @@ export default function Pagina() {
                 <AttachMoneyIcon />
             </Stack>
             <Typography variant="h5" component="div">
-                <b>{(valorTotal) ? `R$ ${(valorTotal).toFixed(2)}` : 'R$ 0.00'}</b>
+                <b>{formatarValor(valorTotal)}</b>
             </Typography>
         </CardContent>
     );
