@@ -19,18 +19,20 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
-    (response) => {
-        return response;
-    },
+    (response) => response,
     async (error) => {
-        if (error.response && error.response.status === 401) {
-            console.error('Erro 401: Não autorizado. Possível token inválido ou expirado.');
-            const originalRequest = error.config;
+        const originalRequest = error.config;
+        if (error.response?.status === 401) {
+            if (originalRequest.url === '/api/refresh-token') {
+                localStorage.clear();
+                window.location.href = '/login';
+                return Promise.reject(error);
+            }
             const refreshToken = localStorage.getItem('refreshToken');
             if (!originalRequest._retry && refreshToken) {
                 originalRequest._retry = true;
                 try {
-                    const refreshResponse = await axios.post('http://72.60.54.143:3000/api/refresh-token', { refreshToken });
+                    const refreshResponse = await api.post('/api/refresh-token', { refreshToken });
                     if (refreshResponse.data.token) {
                         localStorage.setItem('token', refreshResponse.data.token);
                         originalRequest.headers.Authorization = `Bearer ${refreshResponse.data.token}`;
@@ -38,13 +40,12 @@ api.interceptors.response.use(
                     }
                 } catch (refreshError) {
                     console.error('Falha ao atualizar token:', refreshError);
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('refreshToken');
+                    localStorage.clear();
                     window.location.href = '/login';
+                    return Promise.reject(refreshError);
                 }
             } else {
-                localStorage.removeItem('token');
-                localStorage.removeItem('refreshToken');
+                localStorage.clear();
                 window.location.href = '/login';
             }
         }

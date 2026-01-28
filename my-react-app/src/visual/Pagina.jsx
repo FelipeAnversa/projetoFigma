@@ -8,15 +8,13 @@ import Paginacao from '../importantes/Paginacao';
 import Filtrar from '../importantes/Filtrar';
 import Tabela from '../importantes/Tabela';
 import { data } from '../apis/data';
-import { getTransacoes } from '../visual/services/get/getTransacoes';
 import { paginacaoAPI } from '../apis/paginacaoAPI';
-import { valorAPI } from '../apis/valorAPI';
-
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 
 export default function Pagina() {
+    const [loading, setLoading] = useState(true);
     const [valorEntradas, setValorEntradas] = useState(0);
     const [valorSaidas, setValorSaidas] = useState(0);
     const [valorTotal, setValorTotal] = useState(0);
@@ -29,66 +27,49 @@ export default function Pagina() {
     const [totalPaginas, setTotalPaginas] = useState(1);
     
     useEffect(() => {
-        async function fetchData() {
+        async function fetchAllData() {
             try {
-                const data = await paginacaoAPI();
-                if (data?.paginaAtual && !isNaN(data.paginaAtual)) {
-                    setPaginaAtual(Number(data.paginaAtual));
+                setLoading(true);
+                const dadosAPI = await data();
+                if (dadosAPI && Array.isArray(dadosAPI)) {
+                    setRows(dadosAPI);
+                    setRowsFiltradas(dadosAPI);
+                    const entradas = dadosAPI
+                        .filter(item => item.tipo === 'entrada')
+                        .reduce((acc, item) => acc + (item.valor || 0), 0);
+                    const saidas = dadosAPI
+                        .filter(item => item.tipo === 'saida')
+                        .reduce((acc, item) => acc + (item.valor || 0), 0)
+                    setValorEntradas(entradas);
+                    setValorSaidas(saidas);
+                    setValorTotal(entradas - saidas);
                 }
-                if (data?.itemsPorPagina && !isNaN(data.itemsPorPagina)) {
-                    setItemsPorPagina(Number(data.itemsPorPagina));
-                }
-                if (data?.totalPaginas && !isNaN(data.totalPaginas)) {
-                    setTotalPaginas(Number(data.totalPaginas));
+                try {
+                    const pagData = await paginacaoAPI();
+                    if (pagData?.paginaAtual) {
+                        setPaginaAtual(Number(pagData.paginaAtual));
+                    }
+                    if (pagData?.itemsPorPagina) {
+                        setItemsPorPagina(Number(pagData.itemsPorPagina));
+                    }
+                    if (pagData?.totalPaginas) {
+                        setTotalPaginas(Number(pagData.totalPaginas));
+                    }
+                } catch (pagError) {
+                    console.error("Erro na paginação:", pagError);
                 }
             } catch (error) {
-                console.error("Erro na paginação:", error);
+                console.error("Erro ao carregar dados:", error);
+            } finally {
+                setLoading(false);
             }
         }
-        fetchData();
+        fetchAllData();
     }, []);
 
     useEffect(() => {
-        async function fetchValor() {
-            const valorData = await valorAPI();
-            if (valorData && !valorData.error) {
-                setValorEntradas(valorData.entradas || 0);
-                setValorSaidas(valorData.saidas || 0);
-                setValorTotal(valorData.total || 0);
-            }
-        }
-        fetchValor();
-    }, []);
-
-    useEffect(() => {
-        const fetchTransacoes = async () => {
-            const transacoes = await getTransacoes();
-            if (transacoes && Array.isArray(transacoes)) {
-                setRows(transacoes);
-                setRowsFiltradas(transacoes);
-            }
-        };
-        fetchTransacoes();
-    }, []);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const dadosAPI = await data();
-            setRows(dadosAPI);
-            setRowsFiltradas(dadosAPI);
-            setValorEntradas(
-                dadosAPI
-                    .filter(item => item.tipo === 'entrada')
-                    .reduce((acc, item) => acc + item.valor, 0)
-            );
-            setValorSaidas(
-                dadosAPI
-                    .filter(item => item.tipo === 'saida')
-                    .reduce((acc, item) => acc + item.valor, 0)
-            );
-        };
-        fetchData();
-    }, []);
+        console.log("Pagina renderizada. Loading:", loading, "Rows:", rows.length);
+    }, [loading, rows.length]);
 
     function formatarValor(valor) {
         if (typeof valor === 'string') {
@@ -165,6 +146,40 @@ export default function Pagina() {
             </Typography>
         </CardContent>
     );
+
+    useEffect(() => {
+        console.log("USEFFECT: Iniciando");
+        const timer = setTimeout(() => {
+            console.log("USEFFECT: Finalizando loading");
+            setLoading(false);
+        }, 1000);
+        return () => {
+            clearTimeout(timer);
+            console.log("USEFFECT: Cleanup");
+        };
+    }, []);
+
+    if (loading) {
+        return (
+            <ThemeProvider theme={theme}>
+                <Box>
+                    <Typography
+                        variant="h4"
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100vh',
+                            fontFamily: 'Roboto, sans-serif',
+                        }}
+                    >
+                        Carregando...
+                    </Typography>
+                </Box>
+            </ThemeProvider>
+        );
+    }
+
     return (
         <ThemeProvider theme={theme}>
             <Stack
