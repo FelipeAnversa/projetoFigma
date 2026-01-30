@@ -8,6 +8,7 @@ import Paginacao from '../importantes/Paginacao';
 import Filtrar from '../importantes/Filtrar';
 import Tabela from '../importantes/Tabela';
 import { data } from '../apis/data';
+import { valorAPI } from '../apis/valorAPI'
 import { paginacaoAPI } from '../apis/paginacaoAPI';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
@@ -34,15 +35,12 @@ export default function Pagina() {
                 if (dadosAPI && Array.isArray(dadosAPI)) {
                     setRows(dadosAPI);
                     setRowsFiltradas(dadosAPI);
-                    const entradas = dadosAPI
-                        .filter(item => item.tipo === 'entrada')
-                        .reduce((acc, item) => acc + (item.valor || 0), 0);
-                    const saidas = dadosAPI
-                        .filter(item => item.tipo === 'saida')
-                        .reduce((acc, item) => acc + (item.valor || 0), 0)
-                    setValorEntradas(entradas);
-                    setValorSaidas(saidas);
-                    setValorTotal(entradas - saidas);
+                }
+                const valorData = await valorAPI();
+                if (valorData && !valorData.error) {
+                    setValorEntradas(valorData.entradas || 0);
+                    setValorSaidas(valorData.saidas || 0);
+                    setValorTotal(valorData.total || 0);
                 }
                 try {
                     const pagData = await paginacaoAPI();
@@ -147,18 +145,6 @@ export default function Pagina() {
         </CardContent>
     );
 
-    useEffect(() => {
-        console.log("USEFFECT: Iniciando");
-        const timer = setTimeout(() => {
-            console.log("USEFFECT: Finalizando loading");
-            setLoading(false);
-        }, 1000);
-        return () => {
-            clearTimeout(timer);
-            console.log("USEFFECT: Cleanup");
-        };
-    }, []);
-
     if (loading) {
         return (
             <ThemeProvider theme={theme}>
@@ -259,7 +245,7 @@ export default function Pagina() {
                             flexDirection: 'row',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            marginTop: '3rem', // AQUI
+                            marginTop: '4rem', 
                         }}
                     >
                         

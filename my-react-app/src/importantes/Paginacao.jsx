@@ -16,7 +16,7 @@ export default function Paginacao({ paginaAtual, setPaginaAtual, totalPaginas })
                     left: 0,
                     right: 0,
                     backgroundColor: 'grey.100',
-                    padding: '1rem 0',
+                    padding: '1.5rem 0',
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',

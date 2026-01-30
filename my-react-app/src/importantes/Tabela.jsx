@@ -3,6 +3,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteTransacoes } from '../visual/services/delete/deleteTransacoes';
+import { getTransacoes } from '../visual/services/get/getTransacoes'
 import { useMemo } from 'react';
 
 export default function Tabela({ rowsFiltradas , itemsPorPagina , paginaAtual , setRows , setValorEntradas , setValorSaidas , setValorTotal }) {
@@ -48,6 +49,7 @@ export default function Tabela({ rowsFiltradas , itemsPorPagina , paginaAtual , 
             console.error("rowsFiltradas não tem formato esperado:", rowsFiltradas);
             return [];
         }
+        getTransacoes();
         return transacoesArray.slice(startIndex, endIndex);
     }, [rowsFiltradas, paginaAtual, itemsPorPagina]);
 
