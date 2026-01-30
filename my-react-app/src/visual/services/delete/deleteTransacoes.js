@@ -5,7 +5,7 @@ import { getTransacoes } from '../get/getTransacoes';
 export async function deleteTransacoes(id, setRows, setValorEntradas, setValorSaidas, setValorTotal) {
     try {
         const response = await api.delete(`/api/transacoes/${id}`);
-        getTransacoes().then(updatedRows => setRows(updatedRows));
+        getTransacoes(paginaAtual, itensPorPagina).then(updatedRows => setRows(updatedRows));
         const valorData = await valorAPI();
         if (valorData && valorData.error !== true) {
             setValorEntradas(valorData?.entradas || 0);

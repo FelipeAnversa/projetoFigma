@@ -49,7 +49,7 @@ export default function Tabela({ rowsFiltradas , itemsPorPagina , paginaAtual , 
             console.error("rowsFiltradas não tem formato esperado:", rowsFiltradas);
             return [];
         }
-        getTransacoes();
+        getTransacoes(paginaAtual, itemsPorPagina);
         return transacoesArray.slice(startIndex, endIndex);
     }, [rowsFiltradas, paginaAtual, itemsPorPagina]);
 

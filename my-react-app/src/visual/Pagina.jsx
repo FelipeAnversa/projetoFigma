@@ -9,7 +9,6 @@ import Filtrar from '../importantes/Filtrar';
 import Tabela from '../importantes/Tabela';
 import { data } from '../apis/data';
 import { valorAPI } from '../apis/valorAPI'
-import { paginacaoAPI } from '../apis/paginacaoAPI';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
@@ -43,15 +42,14 @@ export default function Pagina() {
                     setValorTotal(valorData.total || 0);
                 }
                 try {
-                    const pagData = await paginacaoAPI();
-                    if (pagData?.paginaAtual) {
-                        setPaginaAtual(Number(pagData.paginaAtual));
+                    if (dadosAPI?.paginacao?.paginaAtual) {
+                        setPaginaAtual(Number(dadosAPI.paginacao.paginaAtual));
                     }
-                    if (pagData?.itemsPorPagina) {
-                        setItemsPorPagina(Number(pagData.itemsPorPagina));
+                    if (dadosAPI?.paginacao?.itemsPorPagina) {
+                        setItemsPorPagina(Number(dadosAPI.paginacao.itemsPorPagina));
                     }
-                    if (pagData?.totalPaginas) {
-                        setTotalPaginas(Number(pagData.totalPaginas));
+                    if (dadosAPI?.paginacao?.totalPaginas) {
+                        setTotalPaginas(Number(dadosAPI.paginacao.totalPaginas));
                     }
                 } catch (pagError) {
                     console.error("Erro na paginação:", pagError);
@@ -208,6 +206,8 @@ export default function Pagina() {
                             setValorSaidas={setValorSaidas}
                             setValorTotal={setValorTotal}
                             setRows={setRows}
+                            paginaAtual={paginaAtual}
+                            itensPorPagina={itemsPorPagina}
                         />
                     </Stack>
                     <Box
@@ -270,12 +270,21 @@ export default function Pagina() {
                             marginBottom: '5rem',
                         }}
                     >
-                        <Tabela rowsFiltradas={rowsFiltradas} itemsPorPagina={itemsPorPagina} paginaAtual={paginaAtual} setRows={setRows} setValorEntradas={setValorEntradas} setValorSaidas={setValorSaidas} setValorTotal={setValorTotal} />
+                        <Tabela 
+                            rowsFiltradas={rowsFiltradas} 
+                            itemsPorPagina={itemsPorPagina} 
+                            paginaAtual={paginaAtual} 
+                            setRows={setRows} 
+                            setValorEntradas={setValorEntradas} 
+                            setValorSaidas={setValorSaidas} 
+                            setValorTotal={setValorTotal} 
+                        />
                     </Stack>
                     <Paginacao 
                         totalPaginas={totalPaginas}
                         paginaAtual={paginaAtual}
                         setPaginaAtual={setPaginaAtual}
+                        itensPorPagina={itemsPorPagina}
                     />
                 </Box>
             </Stack>

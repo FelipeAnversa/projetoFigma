@@ -1,6 +1,5 @@
 import api from './api.js';
 
-let dadosExportados = [];
 let promessaCarregamento = null;
 
 const converterParaArray = (dados) => {
@@ -13,7 +12,8 @@ const converterParaArray = (dados) => {
 const inicializarDados = async () => {
     try {
         const response = await api.get('/api/transacoes');
-        dadosExportados = converterParaArray(response.data?.transacoes).map(item => ({
+        const transacoes = response.data?.transacoes || [];
+        const transacoesProcessadas = converterParaArray(transacoes).map(item => ({
             id: item.id,
             usuario_id: item.usuario_id,
             nome: item.nome,
@@ -22,11 +22,24 @@ const inicializarDados = async () => {
             tipo: item.tipo,
             data: item.data
         }));
-        return dadosExportados;
+        return {
+            transacoes: transacoesProcessadas,
+            paginacao: response.data?.paginacao
+        };
     } catch (error) {
         console.error('Erro ao carregar dados:', error);
         dadosExportados = [];
-        throw error;
+        return {
+            transacoes: [],
+            paginacao: {
+                paginaAtual: 1,
+                limite: 10,
+                total: 0,
+                totalPaginas: 0,
+                temProxima: false,
+                temAnterior: false
+            }
+        };
     }
 };
 

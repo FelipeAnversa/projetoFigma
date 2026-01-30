@@ -6,7 +6,7 @@ import { postTransacoes } from '../visual/services/post/postTransacoes';
 import { getTransacoes } from '../visual/services/get/getTransacoes';
 import { valorAPI } from '../apis/valorAPI';
 
-export default function Transacao({ setRows , setValorEntradas , setValorSaidas , setValorTotal }) {
+export default function Transacao({ setRows , setValorEntradas , setValorSaidas , setValorTotal , paginaAtual , itensPorPagina }) {
     const [open, setOpen] = useState(false);
     const [nome, setNome] = useState('');
     const [valor, setValor] = useState('');
@@ -78,7 +78,7 @@ export default function Transacao({ setRows , setValorEntradas , setValorSaidas 
             return [...safePrevRows, novaTransacao || {}];
         });
         
-        const updatedRows = await getTransacoes();
+        const updatedRows = await getTransacoes(paginaAtual, itensPorPagina);
         setRows(updatedRows);
         
         handleClose();

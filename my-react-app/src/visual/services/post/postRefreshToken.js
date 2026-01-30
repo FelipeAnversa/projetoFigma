@@ -9,10 +9,11 @@ export async function postRefreshToken() {
         const response = await api.post('/api/refresh-token', { 
             refreshToken: refreshToken
         });
-        if (!response.data || !response.data.token) {
+        if (!response.data || !response.data.token || !response.data.refreshToken) {
             throw new Error('Resposta de refresh token inválida');
         }
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('refreshToken', response.data.refreshToken);
         api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
         return response.data;
     } catch (error) {
