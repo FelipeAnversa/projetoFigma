@@ -3,10 +3,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteTransacoes } from '../visual/services/delete/deleteTransacoes';
-import { getTransacoes } from '../visual/services/get/getTransacoes'
-import { useMemo } from 'react';
 
-export default function Tabela({ rowsFiltradas , itemsPorPagina , paginaAtual , setRows , setValorEntradas , setValorSaidas , setValorTotal }) {
+export default function Tabela({ rowsFiltradas }) {
     function formatarData(dataString) {
         const [dataPart] = dataString.split(' ');
         return dataPart.replace(/-/g, '/');
@@ -40,18 +38,6 @@ export default function Tabela({ rowsFiltradas , itemsPorPagina , paginaAtual , 
         const valorFormatado = formatarValor(valor);
         return tipo === 'entrada' ? `+ ${valorFormatado}` : `- ${valorFormatado}`;
     }
-    
-    const dadosPaginaAtual = useMemo(() => {
-        const startIndex = (paginaAtual - 1) * itemsPorPagina;
-        const endIndex = startIndex + itemsPorPagina;
-        const transacoesArray = rowsFiltradas?.transacoes || rowsFiltradas || [];                           
-        if (!Array.isArray(transacoesArray)) {
-            console.error("rowsFiltradas não tem formato esperado:", rowsFiltradas);
-            return [];
-        }
-        getTransacoes(paginaAtual, itemsPorPagina);
-        return transacoesArray.slice(startIndex, endIndex);
-    }, [rowsFiltradas, paginaAtual, itemsPorPagina]);
 
     return (
         <ThemeProvider theme={theme}>
@@ -63,7 +49,7 @@ export default function Tabela({ rowsFiltradas , itemsPorPagina , paginaAtual , 
                     gap: '10px'
                 }}
                 >
-                {dadosPaginaAtual.map((row) => (
+                {rowsFiltradas.map((row) => (
                     <Stack
                         key={row.id}
                         direction="row"
@@ -93,7 +79,10 @@ export default function Tabela({ rowsFiltradas , itemsPorPagina , paginaAtual , 
                         <Box sx={{ width: '15%', color: 'grey.600' }} align='center'>
                             {formatarData(row.data)}
                         </Box>
-                        <DeleteIcon sx={{ color: 'error.main', marginLeft: '10px', cursor: 'pointer' }} onClick={() => deleteTransacoes(row.id, setRows, setValorEntradas, setValorSaidas, setValorTotal)}/>
+                        <DeleteIcon 
+                            sx={{ color: 'error.main', marginLeft: '10px', cursor: 'pointer' }} 
+                            onClick={() => deleteTransacoes(row.id)}
+                        />
                     </Stack>
                 ))}
                 </Stack>

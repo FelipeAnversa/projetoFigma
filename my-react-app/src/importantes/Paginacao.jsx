@@ -1,14 +1,8 @@
 import { Box , Pagination } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme';
-import { getTransacoes } from '../visual/services/get/getTransacoes';
 
-export default function Paginacao({ paginaAtual, setPaginaAtual, totalPaginas, itensPorPagina }) {
-    const handleChange = (event, value) => {
-        setPaginaAtual(value);
-        getTransacoes(value, itensPorPagina);
-    }
-
+export default function Paginacao({ paginaAtual, totalPaginas, handleChange}) {
     return (
         <ThemeProvider theme={theme}>
             <Box

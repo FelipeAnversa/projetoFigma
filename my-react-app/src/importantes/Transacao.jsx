@@ -4,7 +4,7 @@ import { Button, TextField, Stack, Dialog, DialogActions, DialogContent, DialogT
 import { theme } from './theme';
 import { postTransacoes } from '../visual/services/post/postTransacoes';
 import { getTransacoes } from '../visual/services/get/getTransacoes';
-import { valorAPI } from '../apis/valorAPI';
+
 
 export default function Transacao({ setRows , setValorEntradas , setValorSaidas , setValorTotal , paginaAtual , itensPorPagina }) {
     const [open, setOpen] = useState(false);
@@ -66,19 +66,17 @@ export default function Transacao({ setRows , setValorEntradas , setValorSaidas 
         
         await postTransacoes(nome, valorNumerico, categoria, tipoTransacao);
         
-        const valorData = await valorAPI();
-        if (valorData && valorData.error !== true) {
-            setValorEntradas(valorData?.entradas || 0);
-            setValorSaidas(valorData?.saidas || 0);
-            setValorTotal(valorData?.total || 0);
-        }
-        
         setRows(prevRows => {
             const safePrevRows = Array.isArray(prevRows) ? prevRows : [];
             return [...safePrevRows, novaTransacao || {}];
         });
         
         const updatedRows = await getTransacoes(paginaAtual, itensPorPagina);
+        if (updatedRows && updatedRows.error !== true) {
+            setValorEntradas(updatedRows?.entradas || 0);
+            setValorSaidas(updatedRows?.saidas || 0);
+            setValorTotal(updatedRows?.total || 0);
+        }
         setRows(updatedRows);
         
         handleClose();

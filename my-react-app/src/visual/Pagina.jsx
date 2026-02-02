@@ -7,14 +7,12 @@ import Cards from '../importantes/Cards';
 import Paginacao from '../importantes/Paginacao';
 import Filtrar from '../importantes/Filtrar';
 import Tabela from '../importantes/Tabela';
-import { data } from '../apis/data';
-import { valorAPI } from '../apis/valorAPI'
+import { getTransacoes } from './services/get/getTransacoes';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 
 export default function Pagina() {
-    const [loading, setLoading] = useState(true);
     const [valorEntradas, setValorEntradas] = useState(0);
     const [valorSaidas, setValorSaidas] = useState(0);
     const [valorTotal, setValorTotal] = useState(0);
@@ -29,43 +27,28 @@ export default function Pagina() {
     useEffect(() => {
         async function fetchAllData() {
             try {
-                setLoading(true);
-                const dadosAPI = await data();
-                if (dadosAPI && Array.isArray(dadosAPI)) {
-                    setRows(dadosAPI);
-                    setRowsFiltradas(dadosAPI);
+                const GMDS = await getTransacoes(paginaAtual, itemsPorPagina);
+                const { transacoes: listaTransacoes, paginacao, resumo} = GMDS;
+                if (listaTransacoes && Array.isArray(listaTransacoes)) {
+                    setRows(listaTransacoes);
+                    setRowsFiltradas(listaTransacoes);
                 }
-                const valorData = await valorAPI();
-                if (valorData && !valorData.error) {
-                    setValorEntradas(valorData.entradas || 0);
-                    setValorSaidas(valorData.saidas || 0);
-                    setValorTotal(valorData.total || 0);
+                if (resumo && !resumo.error) {
+                    setValorEntradas(resumo.entradas || 0);
+                    setValorSaidas(resumo.saidas || 0);
+                    setValorTotal(resumo.total || 0);
                 }
-                try {
-                    if (dadosAPI?.paginacao?.paginaAtual) {
-                        setPaginaAtual(Number(dadosAPI.paginacao.paginaAtual));
-                    }
-                    if (dadosAPI?.paginacao?.itemsPorPagina) {
-                        setItemsPorPagina(Number(dadosAPI.paginacao.itemsPorPagina));
-                    }
-                    if (dadosAPI?.paginacao?.totalPaginas) {
-                        setTotalPaginas(Number(dadosAPI.paginacao.totalPaginas));
-                    }
-                } catch (pagError) {
-                    console.error("Erro na paginação:", pagError);
+                if (paginacao) {
+                    setPaginaAtual(Number(paginacao.paginaAtual));
+                    setItemsPorPagina(Number(paginacao.itemsPorPagina));
+                    setTotalPaginas(Number(paginacao.totalPaginas));
                 }
             } catch (error) {
                 console.error("Erro ao carregar dados:", error);
-            } finally {
-                setLoading(false);
             }
         }
         fetchAllData();
-    }, []);
-
-    useEffect(() => {
-        console.log("Pagina renderizada. Loading:", loading, "Rows:", rows.length);
-    }, [loading, rows.length]);
+    }, [paginaAtual, itemsPorPagina]);
 
     function formatarValor(valor) {
         if (typeof valor === 'string') {
@@ -91,6 +74,25 @@ export default function Pagina() {
         }
         return valor;
     }
+
+    const handleChange = (event, value) => {
+        setPaginaAtual(value);
+    }
+
+    const filtrar = (buscaFiltrada, rows, setRowsFiltradas, setPaginaAtual) => { //Atualizar
+        const rowsArray = Array.isArray(rows) ? rows : [];
+        if (!buscaFiltrada || buscaFiltrada.trim() === '') {
+            setRowsFiltradas(rowsArray);
+        } else {
+            const filtro = rowsArray.filter((row) =>
+                row.nome?.toLowerCase().includes(buscaFiltrada.toLowerCase()) ||
+                row.categoria?.toLowerCase().includes(buscaFiltrada.toLowerCase()) ||
+                row.data?.toLowerCase().includes(buscaFiltrada.toLowerCase())
+            );
+            setRowsFiltradas(filtro);
+            setPaginaAtual(1);
+        }
+    };
 
     const entradas = (
         <CardContent>
@@ -126,6 +128,7 @@ export default function Pagina() {
         </CardContent>
     );
 
+
     const total = (
         <CardContent>
             <Stack
@@ -142,27 +145,6 @@ export default function Pagina() {
             </Typography>
         </CardContent>
     );
-
-    if (loading) {
-        return (
-            <ThemeProvider theme={theme}>
-                <Box>
-                    <Typography
-                        variant="h4"
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            height: '100vh',
-                            fontFamily: 'Roboto, sans-serif',
-                        }}
-                    >
-                        Carregando...
-                    </Typography>
-                </Box>
-            </ThemeProvider>
-        );
-    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -257,6 +239,7 @@ export default function Pagina() {
                         busca={busca}
                         setBusca={setBusca}
                         setPaginaAtual={setPaginaAtual}
+                        filtrar={filtrar}
                     />
 
                     </Stack>
@@ -272,19 +255,12 @@ export default function Pagina() {
                     >
                         <Tabela 
                             rowsFiltradas={rowsFiltradas} 
-                            itemsPorPagina={itemsPorPagina} 
-                            paginaAtual={paginaAtual} 
-                            setRows={setRows} 
-                            setValorEntradas={setValorEntradas} 
-                            setValorSaidas={setValorSaidas} 
-                            setValorTotal={setValorTotal} 
                         />
                     </Stack>
                     <Paginacao 
                         totalPaginas={totalPaginas}
                         paginaAtual={paginaAtual}
-                        setPaginaAtual={setPaginaAtual}
-                        itensPorPagina={itemsPorPagina}
+                        handleChange={handleChange}
                     />
                 </Box>
             </Stack>

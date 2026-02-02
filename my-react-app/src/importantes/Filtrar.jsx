@@ -4,9 +4,9 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme';
 import SearchIcon from '@mui/icons-material/Search';
 
-export default function Filtrar({ buscaFiltrada, rows, setRowsFiltradas, setBuscaFiltrada, busca, setBusca, setPaginaAtual }) {
+export default function Filtrar({ buscaFiltrada, rows, setRowsFiltradas, setBuscaFiltrada, busca, setBusca, setPaginaAtual, filtrar }) {
     useEffect(() => {
-        filtrar(buscaFiltrada, rows, setRowsFiltradas, setPaginaAtual);
+        filtrar(buscaFiltrada, rows, setRowsFiltradas, setPaginaAtual); //Atualizar
     }, [buscaFiltrada, rows, setRowsFiltradas, filtrar, setPaginaAtual]);
     
     return (
@@ -42,18 +42,3 @@ export default function Filtrar({ buscaFiltrada, rows, setRowsFiltradas, setBusc
         </ThemeProvider>
     );
 }
-
-const filtrar = (buscaFiltrada, rows, setRowsFiltradas, setPaginaAtual) => {
-    const rowsArray = Array.isArray(rows) ? rows : [];
-    if (!buscaFiltrada || buscaFiltrada.trim() === '') {
-        setRowsFiltradas(rowsArray);
-    } else {
-        const filtro = rowsArray.filter((row) =>
-            row.nome?.toLowerCase().includes(buscaFiltrada.toLowerCase()) ||
-            row.categoria?.toLowerCase().includes(buscaFiltrada.toLowerCase()) ||
-            row.data?.toLowerCase().includes(buscaFiltrada.toLowerCase())
-        );
-        setRowsFiltradas(filtro);
-        setPaginaAtual(1);
-    }
-};

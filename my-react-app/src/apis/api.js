@@ -1,4 +1,3 @@
-// Versão simplificada (sem fila de requisições pendentes):
 import axios from 'axios';
 
 const api = axios.create({
@@ -25,7 +24,6 @@ api.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
-        
         if (error.response?.status === 401) {
             if (originalRequest.url === '/api/refresh-token') {
                 if (!isRefreshing) {
@@ -35,22 +33,17 @@ api.interceptors.response.use(
                 }
                 return Promise.reject(error);
             }
-            
             const refreshToken = localStorage.getItem('refreshToken');
-            
             if (!originalRequest._retry && refreshToken && !isRefreshing) {
                 originalRequest._retry = true;
                 isRefreshing = true;
-                
                 try {
                     const refreshResponse = await api.post('/api/refresh-token', { refreshToken });
-                    
                     if (refreshResponse.data.token) {
                         localStorage.setItem('token', refreshResponse.data.token);
                         if (refreshResponse.data.refreshToken) {
                             localStorage.setItem('refreshToken', refreshResponse.data.refreshToken);
                         }
-                        
                         originalRequest.headers.Authorization = `Bearer ${refreshResponse.data.token}`;
                         isRefreshing = false;
                         return api(originalRequest);
