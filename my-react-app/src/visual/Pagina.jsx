@@ -51,21 +51,6 @@ export default function Pagina() {
     }, [paginaAtual, limite]);
 
     function formatarValor(valor) {
-        if (typeof valor === 'string') {
-            const limpo = valor
-                .replace('R$', '')
-                .replace(/\./g, '')
-                .replace(',', '.')
-                .trim();
-            
-            const numero = parseFloat(limpo);
-            if (!isNaN(numero)) {
-                return numero.toLocaleString('pt-BR', { 
-                    style: 'currency', 
-                    currency: 'BRL' 
-                });
-            }
-        }
         if (typeof valor === 'number') {
             return valor.toLocaleString('pt-BR', { 
                 style: 'currency', 
@@ -80,19 +65,19 @@ export default function Pagina() {
     }
 
     useEffect(() => {
-        const rowsArray = Array.isArray(rows) ? rows : [];
-        if (!buscaFiltrada || buscaFiltrada.trim() === '') {
-            setRowsFiltradas(rowsArray);
+        const termo = buscaFiltrada.toLowerCase().trim();
+        if (!termo) {
+            setRowsFiltradas(rows);
         } else {
-            const filtro = rowsArray.filter((row) =>
-                row.nome?.toLowerCase().includes(buscaFiltrada.toLowerCase()) ||
-                row.categoria?.toLowerCase().includes(buscaFiltrada.toLowerCase()) ||
-                row.data?.toLowerCase().includes(buscaFiltrada.toLowerCase())
+            const resultado = rows.filter((item) => 
+                item.nome?.toLowerCase().includes(termo) ||
+                item.categoria?.toLowerCase().includes(termo) ||
+                item.data?.toLowerCase().includes(termo)
             );
-            setRowsFiltradas(filtro);
-            setPaginaAtual(1);
+            setRowsFiltradas(resultado);
         }
-    }, [buscaFiltrada, rows, setRowsFiltradas, setPaginaAtual]);
+        setPaginaAtual(1);
+    }, [buscaFiltrada, rows]);
 
     const entradas = (
         <CardContent>

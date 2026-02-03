@@ -12,21 +12,6 @@ export default function Tabela({ rowsFiltradas, paginaAtual, limite, setRows, se
     }
 
     function formatarValor(valor) {
-        if (typeof valor === 'string') {
-            const limpo = valor
-                .replace('R$', '')
-                .replace(/\./g, '')
-                .replace(',', '.')
-                .trim();
-            
-            const numero = parseFloat(limpo);
-            if (!isNaN(numero)) {
-                return numero.toLocaleString('pt-BR', { 
-                    style: 'currency', 
-                    currency: 'BRL' 
-                });
-            }
-        }
         if (typeof valor === 'number') {
             return valor.toLocaleString('pt-BR', { 
                 style: 'currency', 
