@@ -1,14 +1,9 @@
-import { useEffect } from 'react';
 import { Button, TextField } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme';
 import SearchIcon from '@mui/icons-material/Search';
 
-export default function Filtrar({ buscaFiltrada, rows, setRowsFiltradas, setBuscaFiltrada, busca, setBusca, setPaginaAtual, filtrar }) {
-    useEffect(() => {
-        filtrar(buscaFiltrada, rows, setRowsFiltradas, setPaginaAtual); //Atualizar
-    }, [buscaFiltrada, rows, setRowsFiltradas, filtrar, setPaginaAtual]);
-    
+export default function Filtrar({ setBuscaFiltrada, busca, setBusca }) {
     return (
         <ThemeProvider theme={theme}>
             <TextField 

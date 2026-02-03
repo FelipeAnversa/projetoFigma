@@ -21,13 +21,13 @@ export default function Pagina() {
     const [buscaFiltrada, setBuscaFiltrada] = useState('');
     const [rowsFiltradas, setRowsFiltradas] = useState([]);
     const [paginaAtual, setPaginaAtual] = useState(1);
-    const [itemsPorPagina, setItemsPorPagina] = useState(10);
+    const [limite, setLimite] = useState(10);
     const [totalPaginas, setTotalPaginas] = useState(1);
     
     useEffect(() => {
         async function fetchAllData() {
             try {
-                const GMDS = await getTransacoes(paginaAtual, itemsPorPagina);
+                const GMDS = await getTransacoes(paginaAtual, limite);
                 const { transacoes: listaTransacoes, paginacao, resumo} = GMDS;
                 if (listaTransacoes && Array.isArray(listaTransacoes)) {
                     setRows(listaTransacoes);
@@ -40,7 +40,7 @@ export default function Pagina() {
                 }
                 if (paginacao) {
                     setPaginaAtual(Number(paginacao.paginaAtual));
-                    setItemsPorPagina(Number(paginacao.itemsPorPagina));
+                    setLimite(Number(paginacao.limite));
                     setTotalPaginas(Number(paginacao.totalPaginas));
                 }
             } catch (error) {
@@ -48,7 +48,7 @@ export default function Pagina() {
             }
         }
         fetchAllData();
-    }, [paginaAtual, itemsPorPagina]);
+    }, [paginaAtual, limite]);
 
     function formatarValor(valor) {
         if (typeof valor === 'string') {
@@ -79,7 +79,7 @@ export default function Pagina() {
         setPaginaAtual(value);
     }
 
-    const filtrar = (buscaFiltrada, rows, setRowsFiltradas, setPaginaAtual) => { //Atualizar
+    useEffect(() => {
         const rowsArray = Array.isArray(rows) ? rows : [];
         if (!buscaFiltrada || buscaFiltrada.trim() === '') {
             setRowsFiltradas(rowsArray);
@@ -92,7 +92,7 @@ export default function Pagina() {
             setRowsFiltradas(filtro);
             setPaginaAtual(1);
         }
-    };
+    }, [buscaFiltrada, rows, setRowsFiltradas, setPaginaAtual]);
 
     const entradas = (
         <CardContent>
@@ -189,7 +189,7 @@ export default function Pagina() {
                             setValorTotal={setValorTotal}
                             setRows={setRows}
                             paginaAtual={paginaAtual}
-                            itensPorPagina={itemsPorPagina}
+                            limite={limite}
                         />
                     </Stack>
                     <Box
@@ -232,14 +232,9 @@ export default function Pagina() {
                     >
                         
                     <Filtrar 
-                        buscaFiltrada={buscaFiltrada}
-                        rows={rows}
-                        setRowsFiltradas={setRowsFiltradas}
                         setBuscaFiltrada={setBuscaFiltrada}
                         busca={busca}
                         setBusca={setBusca}
-                        setPaginaAtual={setPaginaAtual}
-                        filtrar={filtrar}
                     />
 
                     </Stack>
@@ -255,6 +250,12 @@ export default function Pagina() {
                     >
                         <Tabela 
                             rowsFiltradas={rowsFiltradas} 
+                            paginaAtual={paginaAtual}
+                            limite={limite}
+                            setRows={setRows}
+                            setValorEntradas={setValorEntradas}
+                            setValorSaidas={setValorSaidas}
+                            setValorTotal={setValorTotal}
                         />
                     </Stack>
                     <Paginacao 

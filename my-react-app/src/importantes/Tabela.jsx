@@ -4,11 +4,13 @@ import { theme } from './theme';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteTransacoes } from '../visual/services/delete/deleteTransacoes';
 
-export default function Tabela({ rowsFiltradas }) {
+export default function Tabela({ rowsFiltradas, paginaAtual, limite, setRows, setValorEntradas, setValorSaidas, setValorTotal }) {
     function formatarData(dataString) {
         const [dataPart] = dataString.split(' ');
-        return dataPart.replace(/-/g, '/');
+        const [ano, mes, dia] = dataPart.split('-');
+        return `${dia}/${mes}/${ano}`;
     }
+
     function formatarValor(valor) {
         if (typeof valor === 'string') {
             const limpo = valor
@@ -81,7 +83,15 @@ export default function Tabela({ rowsFiltradas }) {
                         </Box>
                         <DeleteIcon 
                             sx={{ color: 'error.main', marginLeft: '10px', cursor: 'pointer' }} 
-                            onClick={() => deleteTransacoes(row.id)}
+                            onClick={() => deleteTransacoes(
+                                row.id, 
+                                paginaAtual, 
+                                limite, 
+                                setRows, 
+                                setValorEntradas, 
+                                setValorSaidas, 
+                                setValorTotal
+                            )}
                         />
                     </Stack>
                 ))}

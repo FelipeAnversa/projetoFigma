@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { Button, TextField, Stack, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { theme } from './theme';
@@ -6,7 +6,7 @@ import { postTransacoes } from '../visual/services/post/postTransacoes';
 import { getTransacoes } from '../visual/services/get/getTransacoes';
 
 
-export default function Transacao({ setRows , setValorEntradas , setValorSaidas , setValorTotal , paginaAtual , itensPorPagina }) {
+export default function Transacao({ setRows , setValorEntradas , setValorSaidas , setValorTotal , paginaAtual , limite }) {
     const [open, setOpen] = useState(false);
     const [nome, setNome] = useState('');
     const [valor, setValor] = useState('');
@@ -71,14 +71,7 @@ export default function Transacao({ setRows , setValorEntradas , setValorSaidas 
             return [...safePrevRows, novaTransacao || {}];
         });
         
-        const updatedRows = await getTransacoes(paginaAtual, itensPorPagina);
-        if (updatedRows && updatedRows.error !== true) {
-            setValorEntradas(updatedRows?.entradas || 0);
-            setValorSaidas(updatedRows?.saidas || 0);
-            setValorTotal(updatedRows?.total || 0);
-        }
-        setRows(updatedRows);
-        
+        getTransacoes(paginaAtual, limite).then(data => setRows(data.transacoes || []));
         handleClose();
     };
     
