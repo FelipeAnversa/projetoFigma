@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { Button, TextField, Stack, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { theme } from './theme';
@@ -6,7 +6,7 @@ import { postTransacoes } from '../visual/services/post/postTransacoes';
 import { getTransacoes } from '../visual/services/get/getTransacoes';
 
 
-export default function Transacao({ setRows , setValorEntradas , setValorSaidas , setValorTotal , paginaAtual , limite }) {
+export default function Transacao({ setRows, setValorEntradas, setValorSaidas, setValorTotal, paginaAtual, limite }) {
     const [open, setOpen] = useState(false);
     const [nome, setNome] = useState('');
     const [valor, setValor] = useState('');
@@ -46,12 +46,10 @@ export default function Transacao({ setRows , setValorEntradas , setValorSaidas 
     
     const handleCadastrar = async () => {
         const valorNumerico = parseFloat(valor);
-        
         if (isNaN(valorNumerico) || valorNumerico <= 0) {
             alert('Por favor, insira um valor válido maior que zero');
             return;
         }
-        
         if (tipoTransacao === 'entrada') {
             setValorEntradas(prev => prev + valorNumerico);
             setValorTotal(prev => prev + valorNumerico);
@@ -59,18 +57,14 @@ export default function Transacao({ setRows , setValorEntradas , setValorSaidas 
             setValorSaidas(prev => prev + valorNumerico);
             setValorTotal(prev => prev - valorNumerico);
         }
-        
         const dataFormatada = ComponenteData();
         const precoParaTabela = tipoTransacao === 'saida' ? -valorNumerico : valorNumerico;
         const novaTransacao = createData(nome, precoParaTabela, categoria, tipoTransacao, dataFormatada);
-        
         await postTransacoes(nome, valorNumerico, categoria, tipoTransacao);
-        
         setRows(prevRows => {
             const safePrevRows = Array.isArray(prevRows) ? prevRows : [];
             return [...safePrevRows, novaTransacao || {}];
         });
-        
         getTransacoes(paginaAtual, limite).then(data => setRows(data.transacoes || []));
         handleClose();
     };
@@ -88,7 +82,6 @@ export default function Transacao({ setRows , setValorEntradas , setValorSaidas 
             >
                 Nova transação
             </Button>
-            
             <ThemeProvider theme={theme}>
                 <Dialog 
                     open={open} 
@@ -124,7 +117,6 @@ export default function Transacao({ setRows , setValorEntradas , setValorSaidas 
                             ✕
                         </Button>
                     </Stack>
-                    
                     <DialogContent sx={{ 
                         backgroundColor: 'grey.100', 
                         paddingTop: '0!important',
@@ -143,7 +135,6 @@ export default function Transacao({ setRows , setValorEntradas , setValorSaidas 
                                     }
                                 }}
                             />
-                                
                             <TextField 
                                 label="Preço" 
                                 variant="outlined" 
@@ -156,8 +147,7 @@ export default function Transacao({ setRows , setValorEntradas , setValorSaidas 
                                         backgroundColor: 'grey.50'
                                     }
                                 }}
-                            />
-                                
+                            /> 
                             <TextField 
                                 label="Categoria" 
                                 variant="outlined" 
@@ -170,7 +160,6 @@ export default function Transacao({ setRows , setValorEntradas , setValorSaidas 
                                     }
                                 }}
                             />
-                            
                             <Stack direction="row" spacing={2} sx={{ marginTop: '1rem' }}>
                                 <Button 
                                     variant={tipoTransacao === 'entrada' ? 'contained' : 'outlined'} 
@@ -205,7 +194,6 @@ export default function Transacao({ setRows , setValorEntradas , setValorSaidas 
                             </Stack>
                         </Stack>
                     </DialogContent>
-                    
                     <DialogActions sx={{ 
                         backgroundColor: 'grey.100', 
                         padding: '0 1.5rem 1.5rem', 

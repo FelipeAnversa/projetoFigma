@@ -39,13 +39,10 @@ export default function Cadastro({ dadosLogin, onCadastroSucesso }) {
             const dataFormatada = ComponenteData();
             const novoUsuario = { login: usuario, senha: senha, 'criado-em': dataFormatada };
             const novosDados = [...dadosLogin, novoUsuario];
-            
             onCadastroSucesso(novosDados);
             postCriarConta(usuario, senha, dataFormatada);
-
             setSucesso('Cadastro realizado com sucesso!');
             setErro('');
-            
             setTimeout(() => {
                 handleClose();
             }, 1000);

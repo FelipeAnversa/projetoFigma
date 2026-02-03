@@ -113,7 +113,6 @@ export default function Pagina() {
         </CardContent>
     );
 
-
     const total = (
         <CardContent>
             <Stack
@@ -198,7 +197,6 @@ export default function Pagina() {
                         </Card>
                     </Box>
                 </Box>
-
                 <Box
                     sx={{
                         marginTop: '15vh',
@@ -215,15 +213,12 @@ export default function Pagina() {
                             marginTop: '4rem', 
                         }}
                     >
-                        
-                    <Filtrar 
-                        setBuscaFiltrada={setBuscaFiltrada}
-                        busca={busca}
-                        setBusca={setBusca}
-                    />
-
+                        <Filtrar 
+                            setBuscaFiltrada={setBuscaFiltrada}
+                            busca={busca}
+                            setBusca={setBusca}
+                        />
                     </Stack>
-
                     <Stack
                         sx={{
                             marginTop: '1.2rem',

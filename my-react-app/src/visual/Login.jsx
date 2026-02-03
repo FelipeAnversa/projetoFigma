@@ -14,7 +14,6 @@ export default function Login() {
     const [erro, setErro] = useState('');
     const [sucesso, setSucesso] = useState('');
     const [logado, setLogado] = useState(false);
-    
     const [dadosLogin, setDadosLogin] = useState([...api]);
 
     const verificar = () => {
@@ -83,7 +82,6 @@ export default function Login() {
                         }
                     }}
                 />
-                
                 <TextField
                     label="Senha"
                     variant="outlined"
@@ -99,7 +97,6 @@ export default function Login() {
                         }
                     }}
                 />
-                
                 <Stack direction="row" spacing={2} sx={{ marginTop: '1rem' }}>
                     <Cadastro 
                         dadosLogin={dadosLogin} 
@@ -112,7 +109,6 @@ export default function Login() {
                         Entrar
                     </Button>
                 </Stack>
-
                 <Snackbar 
                     open={!!erro} 
                     autoHideDuration={6000} 
@@ -122,7 +118,6 @@ export default function Login() {
                         {erro}
                     </Alert>
                 </Snackbar>
-
                 <Snackbar 
                     open={!!sucesso} 
                     autoHideDuration={6000} 
