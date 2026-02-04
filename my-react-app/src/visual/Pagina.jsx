@@ -65,19 +65,22 @@ export default function Pagina() {
     }
 
     useEffect(() => {
-        const termo = buscaFiltrada.toLowerCase().trim();
-        if (!termo) {
-            setRowsFiltradas(rows);
-        } else {
-            const resultado = rows.filter((item) => 
-                item.nome?.toLowerCase().includes(termo) ||
-                item.categoria?.toLowerCase().includes(termo) ||
-                item.data?.toLowerCase().includes(termo)
-            );
-            setRowsFiltradas(resultado);
+        const rowsArray = Array.isArray(rows) ? rows : [];
+        if (!buscaFiltrada?.trim()) {
+            setRowsFiltradas(rowsArray);
+            return; 
         }
+        const termo = buscaFiltrada.toLowerCase();
+        const filtro = rowsArray.filter(({ nome, categoria, data }) => {
+            return (
+                nome?.toLowerCase().includes(termo) ||
+                categoria?.toLowerCase().includes(termo) ||
+                data?.toLowerCase().includes(termo)
+            );
+        });
+        setRowsFiltradas(filtro);
         setPaginaAtual(1);
-    }, [buscaFiltrada, rows]);
+    }, [buscaFiltrada, rows, setRowsFiltradas, setPaginaAtual]);
 
     const entradas = (
         <CardContent>
