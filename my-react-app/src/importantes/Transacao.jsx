@@ -7,68 +7,42 @@ import { getTransacoes } from '../visual/services/get/getTransacoes';
 import { Controller, useForm } from "react-hook-form";
 
 export default function Transacao({ setRows, setValorEntradas, setValorSaidas, setValorTotal, paginaAtual, limite }) {
-    const { control, handleSubmit, reset, formState: { errors } } = useForm({
+    const dataHoje = new Date().toLocaleDateString('pt-BR');
+
+    const { control, handleSubmit, reset, watch, setValue } = useForm({
         defaultValues: {
             descricao: '',
-            preco: 0,
+            preco: '',
             categoria: '',
-            tipoTransacao: 'entrada'
+            tipoTransacao: 'entrada',
+            data: dataHoje
         }
     });
     
+    const tipoTransacao = watch('tipoTransacao');
     const [open, setOpen] = useState(false);
-    
-    function createData(nome, valor, categoria, tipo, data) {
-        return { 
-            id: Date.now(),
-            nome, 
-            valor: parseFloat(valor),
-            categoria, 
-            tipo, 
-            data
-        };
-    }
-
-    function ComponenteData() {
-        const dataAtual = new Date();
-        const dia = String(dataAtual.getDate()).padStart(2, '0');
-        const mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
-        const ano = dataAtual.getFullYear();
-        return `${dia}/${mes}/${ano}`;
-    }
 
     const handleClickOpen = () => {
         setOpen(true);
     };
     
     const handleClose = () => {
-        setOpen(false);
         reset();
+        setOpen(false);
     };
     
-    const onSubmit = async (data) => {
-        const valorNumerico = parseFloat(data.preco);
-        if (isNaN(valorNumerico) || valorNumerico <= 0) {
-            alert('Por favor, insira um valor válido maior que zero');
-            return;
-        }
-        if (data.tipoTransacao === 'entrada') {
+    const onSubmit = async (dados) => {
+        const valorNumerico = parseFloat(dados.preco);
+        await postTransacoes(dados.descricao, valorNumerico, dados.categoria, dados.tipoTransacao);
+        if (dados.tipoTransacao === 'entrada') {
             setValorEntradas(prev => prev + valorNumerico);
             setValorTotal(prev => prev + valorNumerico);
         } else {
             setValorSaidas(prev => prev + valorNumerico);
             setValorTotal(prev => prev - valorNumerico);
         }
-        const dataFormatada = ComponenteData();
-        const precoParaTabela = data.tipoTransacao === 'saida' ? -valorNumerico : valorNumerico;
-        const novaTransacao = createData(data.descricao, precoParaTabela, data.categoria, data.tipoTransacao, dataFormatada);
-        await postTransacoes(data.descricao, valorNumerico, data.categoria, data.tipoTransacao);
-        setRows(prevRows => {
-            const safePrevRows = Array.isArray(prevRows) ? prevRows : [];
-            return [...safePrevRows, novaTransacao || {}];
-        });
-        getTransacoes(paginaAtual, limite).then(data => setRows(data.transacoes || []));
-        reset();
+        const resposta = await getTransacoes(paginaAtual, limite);
+        setRows(resposta.transacoes || []);
         handleClose();
     };
     
@@ -130,15 +104,12 @@ export default function Transacao({ setRows, setValorEntradas, setValorSaidas, s
                                 <Controller 
                                     name='descricao'
                                     control={control}
-                                    rules={{ required: "A descrição é obrigatório" }}
                                     render={({ field }) => (
                                         <TextField 
                                             {...field}
                                             label="Descrição" 
                                             variant="outlined" 
                                             fullWidth 
-                                            error={!!errors.descricao}
-                                            helperText={errors.descricao?.message}
                                             sx={{
                                                 '& .MuiOutlinedInput-root': {
                                                     backgroundColor: 'grey.50'
@@ -150,7 +121,6 @@ export default function Transacao({ setRows, setValorEntradas, setValorSaidas, s
                                 <Controller 
                                     name='preco'
                                     control={control}
-                                    rules={{ required: "O Preço é obrigatório" }} 
                                     render={({ field }) => (
                                         <TextField 
                                             {...field}
@@ -158,8 +128,6 @@ export default function Transacao({ setRows, setValorEntradas, setValorSaidas, s
                                             variant="outlined" 
                                             fullWidth 
                                             type="number"
-                                            error={!!errors.preco}
-                                            helperText={errors.preco?.message}
                                             sx={{
                                                 '& .MuiOutlinedInput-root': {
                                                     backgroundColor: 'grey.50'
@@ -171,15 +139,12 @@ export default function Transacao({ setRows, setValorEntradas, setValorSaidas, s
                                 <Controller 
                                     name='categoria'
                                     control={control}
-                                    rules={{ required: 'A Categoria é obrigatória' }}
                                     render={({ field }) => (
                                         <TextField 
                                             {...field}
                                             label="Categoria" 
                                             variant="outlined" 
                                             fullWidth 
-                                            error={!!errors.categoria}
-                                            helperText={errors.categoria?.message}
                                             sx={{
                                                 '& .MuiOutlinedInput-root': {
                                                     backgroundColor: 'grey.50'
@@ -190,6 +155,7 @@ export default function Transacao({ setRows, setValorEntradas, setValorSaidas, s
                                 />
                                 <Stack direction="row" spacing={2} sx={{ marginTop: '1rem' }}>
                                     <Button 
+                                        type="button"
                                         variant={tipoTransacao === 'entrada' ? 'contained' : 'outlined'} 
                                         sx={{
                                             backgroundColor: tipoTransacao === 'entrada' ? 'primary.main' : 'transparent',
@@ -205,6 +171,7 @@ export default function Transacao({ setRows, setValorEntradas, setValorSaidas, s
                                         Entrada
                                     </Button>
                                     <Button 
+                                        type="button"
                                         variant={tipoTransacao === 'saida' ? 'contained' : 'outlined'} 
                                         sx={{
                                             backgroundColor: tipoTransacao === 'saida' ? 'error.main' : 'transparent',
@@ -236,13 +203,9 @@ export default function Transacao({ setRows, setValorEntradas, setValorSaidas, s
                                     minWidth: 120,
                                     '&:hover': {
                                         backgroundColor: 'primary.dark'
-                                    },
-                                    '&.Mui-disabled': {
-                                        backgroundColor: 'primary.main',
-                                        color: 'white'
                                     }
                                 }}
-                                disabled={Object.keys(errors).length > 0}
+                                onClick={handleSubmit(onSubmit)}
                             >
                                 Cadastrar
                             </Button>
