@@ -62,7 +62,7 @@ export default function Tabela({ rowsFiltradas, paginaAtual, limite, setRows, se
                         <Typography 
                             sx={{ 
                                 width: { xs: '100%', md: '20%' }, 
-                                color: row.tipo === 'entrada' ? 'success.main' : 'error.main',
+                                color: row.tipo === 'entrada' ? 'primary.light' : 'error.main',
                                 fontWeight: 'bold'
                             }}
                         >
@@ -74,7 +74,7 @@ export default function Tabela({ rowsFiltradas, paginaAtual, limite, setRows, se
                             sx={{ 
                                 width: { xs: '100%', md: '40%' },
                                 justifyContent: { xs: 'space-between', md: 'space-around' },
-                                color: 'grey.600'
+                                color: {xs: 'grey.400', md: 'grey.600'}
                             }}
                         >
                             <Box sx={{ minWidth: '80px' }}>{row.categoria}</Box>

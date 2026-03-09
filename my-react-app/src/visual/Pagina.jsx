@@ -157,26 +157,30 @@ export default function Pagina() {
                         position: 'fixed',
                         top: 0,
                         zIndex: 1000,
+                        gap: '1rem',
                     }}
                 >
                     <Stack
                         direction="row"
                         sx={{
-                            marginTop: '0',
-                            marginBottom: '2rem',
+                            marginTop: { xs: '1rem', md: '0' },
+                            marginBottom: '3rem',
                             width: '90vw',
                             justifyContent: 'space-between',
                             alignItems: 'center',
                         }}
                     >
-                        <img 
-                            src="fotos/image.png" 
-                            alt="Finance" 
-                            sx={{ 
-                                width: { xs: 120, md: 180 }, 
-                                height: 'auto', 
-                                objectFit: 'contain'
-                            }} 
+                        <Box
+                            component="img"
+                            src="fotos/image.png"
+                            alt="Finance"
+                            sx={{
+                                width: '180px',
+                                height: 'auto',
+                                maxWidth: '100%',
+                                objectFit: 'contain',
+                                display: 'block'
+                            }}
                         />
                         <Transacao 
                             setValorEntradas={setValorEntradas} 
