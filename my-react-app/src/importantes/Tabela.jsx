@@ -1,4 +1,4 @@
-import { Stack , Box , Paper } from '@mui/material';
+import { Stack , Box , Paper, Typography } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -30,57 +30,78 @@ export default function Tabela({ rowsFiltradas, paginaAtual, limite, setRows, se
         <ThemeProvider theme={theme}>
             <Stack
                 component={Paper}
+                elevation={0}
                 sx={{
-                    fontFamily: 'Roboto, sans-serif',
-                    display: 'flex',
-                    gap: '10px'
+                    gap: '10px',
+                    p: 2,
+                    backgroundColor: 'transparent' 
                 }}
-                >
+            >
                 {rowsFiltradas.map((row) => (
                     <Stack
                         key={row.id}
-                        direction="row"
-                        sx={{ 
+                        direction={{ xs: 'column', md: 'row' }}
+                        spacing={2}
+                        sx={{
                             padding: '15px',
-                            backgroundColor: 'grey.300',
-                            borderRadius: '4px',
-                            borderBottom: '1px solid',
-                            borderColor: 'grey.300',
-                            alignItems: 'center',
-                            
+                            backgroundColor: 'grey.300', 
+                            borderRadius: '8px',
+                            alignItems: { xs: 'flex-start', md: 'center' },
+                            justifyContent: 'space-between'
                         }}
                     >
-                        <Box sx={{ width: '40%', color: 'grey.600' }} align='left'>
+                        <Typography 
+                            sx={{ 
+                                width: { xs: '100%', md: '30%' }, 
+                                fontWeight: 500,
+                                color: 'grey.600' 
+                            }}
+                        >
                             {row.nome}
-                        </Box>
+                        </Typography>
+                        <Typography 
+                            sx={{ 
+                                width: { xs: '100%', md: '20%' }, 
+                                color: row.tipo === 'entrada' ? 'success.main' : 'error.main',
+                                fontWeight: 'bold'
+                            }}
+                        >
+                            {adicionarSinal(row.valor, row.tipo)}
+                        </Typography>
+                        <Stack
+                            direction="row"
+                            spacing={2}
+                            sx={{ 
+                                width: { xs: '100%', md: '40%' },
+                                justifyContent: { xs: 'space-between', md: 'space-around' },
+                                color: 'grey.600'
+                            }}
+                        >
+                            <Box sx={{ minWidth: '80px' }}>{row.categoria}</Box>
+                            <Box>{formatarData(row.data)}</Box>
+                        </Stack>
                         <Box 
                             sx={{ 
-                                width: '20%', 
-                                color: row.tipo === 'entrada' ? 'success.main' : 'error.main' 
+                                width: { xs: '100%', md: '5%' }, 
+                                display: 'flex', 
+                                justifyContent: { xs: 'flex-end', md: 'center' } 
                             }}
-                        >{adicionarSinal(row.valor, row.tipo)}
+                        >
+                            <DeleteIcon 
+                                sx={{ 
+                                    color: 'error.light', 
+                                    cursor: 'pointer',
+                                    '&:hover': { color: 'error.main' }
+                                }} 
+                                onClick={() => deleteTransacoes(
+                                    row.id, paginaAtual, limite, setRows, 
+                                    setValorEntradas, setValorSaidas, setValorTotal
+                                )}
+                            />
                         </Box>
-                        <Box sx={{ width: '25%', color: 'grey.600' }} align='center'>
-                            {row.categoria}
-                        </Box>
-                        <Box sx={{ width: '15%', color: 'grey.600' }} align='center'>
-                            {formatarData(row.data)}
-                        </Box>
-                        <DeleteIcon 
-                            sx={{ color: 'error.main', marginLeft: '10px', cursor: 'pointer' }} 
-                            onClick={() => deleteTransacoes(
-                                row.id, 
-                                paginaAtual, 
-                                limite, 
-                                setRows, 
-                                setValorEntradas, 
-                                setValorSaidas, 
-                                setValorTotal
-                            )}
-                        />
                     </Stack>
                 ))}
-                </Stack>
+            </Stack>
         </ThemeProvider>
     );
 }

@@ -52,7 +52,7 @@ export default function Transacao({ setRows, setValorEntradas, setValorSaidas, s
                 variant='contained' 
                 onClick={handleClickOpen}
                 sx={{
-                    padding: '1rem 1.5rem',
+                    padding: {xs: '0.5rem 1rem', sm: '0.75rem 1.5rem'},
                     backgroundColor: 'primary.main',
                     '&:hover': { backgroundColor: 'primary.dark' },
                 }}

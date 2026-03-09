@@ -169,7 +169,15 @@ export default function Pagina() {
                             alignItems: 'center',
                         }}
                     >
-                        <img src="fotos/image.png" alt="Finance" width={180} height={50} />
+                        <img 
+                            src="fotos/image.png" 
+                            alt="Finance" 
+                            sx={{ 
+                                width: { xs: 120, md: 180 }, 
+                                height: 'auto', 
+                                objectFit: 'contain'
+                            }} 
+                        />
                         <Transacao 
                             setValorEntradas={setValorEntradas} 
                             setValorSaidas={setValorSaidas}
@@ -184,6 +192,10 @@ export default function Pagina() {
                             position: 'absolute',
                             bottom: '-3rem',
                             display: 'flex',
+                            overflowX: 'auto',
+                            width: '100%',
+                            justifyContent: {xs: 'flex-start', md: 'center'},
+                            alignItems: { xs: 'flex-start', md: 'center' },
                         }}
                     >
                         <Cards valor={entradas} />
@@ -214,6 +226,8 @@ export default function Pagina() {
                             justifyContent: 'center',
                             alignItems: 'center',
                             marginTop: '4rem', 
+                            ml: '1rem',
+                            mr: '1rem'
                         }}
                     >
                         <Filtrar 

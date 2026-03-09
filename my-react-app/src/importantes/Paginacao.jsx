@@ -11,13 +11,13 @@ export default function Paginacao({ paginaAtual, totalPaginas, handleChange}) {
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    backgroundColor: 'grey.100',
+                    backgroundColor: {xs: 'transparent', md: 'grey.100'},
                     padding: '1.5rem 0',
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
                     zIndex: 999,
-                    borderTop: '1px solid',
+                    borderTop: {xs: 'none', md: '1px solid'},
                     borderColor: 'grey.300',
                 }}
             >
