@@ -1,39 +1,46 @@
-import { Button, TextField } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
-import { theme } from './theme';
+import { Button, TextField, Stack } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { useForm } from "react-hook-form";
 
-export default function Filtrar({ setBuscaFiltrada, busca, setBusca }) {
+export default function Filtrar({ setBuscaFiltrada }) {
+    const { register, handleSubmit } = useForm({
+        defaultValues: { termo: '' }
+    });
+
+    const aoSubmeter = (dados) => {
+        setBuscaFiltrada(dados.termo);
+    };
+
     return (
-        <ThemeProvider theme={theme}>
+        <Stack 
+            component="form" 
+            onSubmit={handleSubmit(aoSubmeter)} 
+            direction="row" 
+            sx={{ width: '100%', justifyContent: 'center' }}
+        >
             <TextField 
-                id="filled-basic" 
+                {...register("termo")} 
                 label="Busque uma transação" 
                 variant="filled"
-                onChange={(e) => setBusca(e.target.value)}
                 sx={{
                     width: '80vw',
                     bgcolor: 'grey.50',
                     '& .MuiInputLabel-root': { color: 'grey.400' },
                     '& .MuiFilledInput-root': { color: 'grey.500' },
-                    '& .MuiFilledInput-underline:after': { 
-                        borderBottomColor: 'primary.main' 
-                    },
-                    '.MuiFilledInput-root.Mui-focused': {
-                        bgcolor: 'grey.50',
-                    }
+                    '& .MuiFilledInput-underline:after': { borderBottomColor: 'primary.main' }
                 }}
             />
             <Button 
+                type="submit" 
                 variant="outlined"
-                onClick={() => setBuscaFiltrada(busca)}
                 sx={{
                     marginLeft: '10px',
                     padding: '1rem 1.5rem',
                     '&:hover': { backgroundColor: 'primary.dark' },
                 }}
             >
-            <SearchIcon />Buscar</Button>
-        </ThemeProvider>
+                <SearchIcon /> Buscar
+            </Button>
+        </Stack>
     );
 }

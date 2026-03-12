@@ -1,86 +1,34 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { Box, Stack, Typography, CardContent, Card } from '@mui/material';
-import { useState , useEffect } from 'react';
+import { useState } from 'react';
+
 import { theme } from '../importantes/theme';
 import Transacao from '../importantes/Transacao';
 import Cards from '../importantes/Cards';
 import Paginacao from '../importantes/Paginacao';
 import Filtrar from '../importantes/Filtrar';
 import Tabela from '../importantes/Tabela';
-import { getTransacoes } from './services/get/getTransacoes';
+
+import { useFinanceiro } from '../hooks/useFinanceiro';
+import { useFormatacao } from '../hooks/useFormatacao';
+import { usePaginacao } from '../hooks/usePaginacao';
+import { useFiltro } from '../hooks/useFiltro';
+
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 
 export default function Pagina() {
-    const [valorEntradas, setValorEntradas] = useState(0);
-    const [valorSaidas, setValorSaidas] = useState(0);
-    const [valorTotal, setValorTotal] = useState(0);
-    const [rows, setRows] = useState([]);
-    const [busca, setBusca] = useState('');
     const [buscaFiltrada, setBuscaFiltrada] = useState('');
-    const [rowsFiltradas, setRowsFiltradas] = useState([]);
     const [paginaAtual, setPaginaAtual] = useState(1);
     const [limite, setLimite] = useState(10);
-    const [totalPaginas, setTotalPaginas] = useState(1);
-    
-    useEffect(() => {
-        async function fetchAllData() {
-            try {
-                const GMDS = await getTransacoes(paginaAtual, limite);
-                const { transacoes: listaTransacoes, paginacao, resumo} = GMDS;
-                if (listaTransacoes && Array.isArray(listaTransacoes)) {
-                    setRows(listaTransacoes);
-                    setRowsFiltradas(listaTransacoes);
-                }
-                if (resumo && !resumo.error) {
-                    setValorEntradas(resumo.entradas || 0);
-                    setValorSaidas(resumo.saidas || 0);
-                    setValorTotal(resumo.total || 0);
-                }
-                if (paginacao) {
-                    setPaginaAtual(Number(paginacao.paginaAtual));
-                    setLimite(Number(paginacao.limite));
-                    setTotalPaginas(Number(paginacao.totalPaginas));
-                }
-            } catch (error) {
-                console.error("Erro ao carregar dados:", error);
-            }
-        }
-        fetchAllData();
-    }, [paginaAtual, limite]);
 
-    function formatarValor(valor) {
-        if (typeof valor === 'number') {
-            return valor.toLocaleString('pt-BR', { 
-                style: 'currency', 
-                currency: 'BRL' 
-            });
-        }
-        return valor;
-    }
+    const { rows, resumo, paginacao, carregarDados, adicionarTransacao, excluirTransacao } = useFinanceiro(paginaAtual, limite);
+    const { formatarMoeda } = useFormatacao();
+    const { handleChange } = usePaginacao(paginacao.totalPaginas, paginaAtual, setPaginaAtual);
+    const { rowsFiltradas } = useFiltro(rows, buscaFiltrada);
 
-    const handleChange = (event, value) => {
-        setPaginaAtual(value);
-    }
-
-    useEffect(() => {
-        const rowsArray = Array.isArray(rows) ? rows : [];
-        if (!buscaFiltrada?.trim()) {
-            setRowsFiltradas(rowsArray);
-            return; 
-        }
-        const termo = buscaFiltrada.toLowerCase();
-        const filtro = rowsArray.filter(({ nome, categoria, data }) => {
-            return (
-                nome?.toLowerCase().includes(termo) ||
-                categoria?.toLowerCase().includes(termo) ||
-                data?.toLowerCase().includes(termo)
-            );
-        });
-        setRowsFiltradas(filtro);
-        setPaginaAtual(1);
-    }, [buscaFiltrada, rows, setRowsFiltradas, setPaginaAtual]);
+    const { entradas: valorEntradas, saidas: valorSaidas, total: valorTotal } = resumo;
 
     const entradas = (
         <CardContent>
@@ -94,7 +42,7 @@ export default function Pagina() {
                 <ArrowCircleUpIcon color="success"/>
             </Stack>
             <Typography variant="h5" component="div">
-                <b>{formatarValor(valorEntradas)}</b>
+                <b>{formatarMoeda(valorEntradas)}</b>
             </Typography>
         </CardContent>
     );
@@ -111,7 +59,7 @@ export default function Pagina() {
                 <ArrowCircleDownIcon sx={{ color: "error.main" }}/>
             </Stack>
             <Typography variant="h5" component="div">
-                <b>{formatarValor(valorSaidas)}</b>
+                <b>{formatarMoeda(valorSaidas)}</b>
             </Typography>
         </CardContent>
     );
@@ -128,7 +76,7 @@ export default function Pagina() {
                 <AttachMoneyIcon />
             </Stack>
             <Typography variant="h5" component="div">
-                <b>{formatarValor(valorTotal)}</b>
+                <b>{formatarMoeda(valorTotal)}</b>
             </Typography>
         </CardContent>
     );
@@ -183,12 +131,7 @@ export default function Pagina() {
                             }}
                         />
                         <Transacao 
-                            setValorEntradas={setValorEntradas} 
-                            setValorSaidas={setValorSaidas}
-                            setValorTotal={setValorTotal}
-                            setRows={setRows}
-                            paginaAtual={paginaAtual}
-                            limite={limite}
+                            adicionarTransacao={adicionarTransacao}
                         />
                     </Stack>
                     <Box
@@ -236,8 +179,6 @@ export default function Pagina() {
                     >
                         <Filtrar 
                             setBuscaFiltrada={setBuscaFiltrada}
-                            busca={busca}
-                            setBusca={setBusca}
                         />
                     </Stack>
                     <Stack
@@ -251,17 +192,11 @@ export default function Pagina() {
                     >
                         <Tabela 
                             rowsFiltradas={rowsFiltradas} 
-                            paginaAtual={paginaAtual}
-                            limite={limite}
-                            setRows={setRows}
-                            setValorEntradas={setValorEntradas}
-                            setValorSaidas={setValorSaidas}
-                            setValorTotal={setValorTotal}
+                            carregarDados={carregarDados}
+                            excluirTransacao={excluirTransacao}
                         />
                     </Stack>
                     <Paginacao 
-                        totalPaginas={totalPaginas}
-                        paginaAtual={paginaAtual}
                         handleChange={handleChange}
                     />
                 </Box>

@@ -2,11 +2,9 @@ import { useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { Button, TextField, Stack, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { theme } from './theme';
-import { postTransacoes } from '../visual/services/post/postTransacoes';
-import { getTransacoes } from '../visual/services/get/getTransacoes';
 import { Controller, useForm } from "react-hook-form";
 
-export default function Transacao({ setRows, setValorEntradas, setValorSaidas, setValorTotal, paginaAtual, limite }) {
+export default function Transacao({ adicionarTransacao }) {
     const dataHoje = new Date().toLocaleDateString('pt-BR');
 
     const { control, handleSubmit, reset, watch, setValue } = useForm({
@@ -32,18 +30,12 @@ export default function Transacao({ setRows, setValorEntradas, setValorSaidas, s
     };
     
     const onSubmit = async (dados) => {
-        const valorNumerico = parseFloat(dados.preco);
-        await postTransacoes(dados.descricao, valorNumerico, dados.categoria, dados.tipoTransacao);
-        if (dados.tipoTransacao === 'entrada') {
-            setValorEntradas(prev => prev + valorNumerico);
-            setValorTotal(prev => prev + valorNumerico);
-        } else {
-            setValorSaidas(prev => prev + valorNumerico);
-            setValorTotal(prev => prev - valorNumerico);
+        try {
+            await adicionarTransacao(dados);
+            handleClose();
+        } catch (error) {
+            console.error("Erro ao cadastrar:", error);
         }
-        const resposta = await getTransacoes(paginaAtual, limite);
-        setRows(resposta.transacoes || []);
-        handleClose();
     };
     
     return (
