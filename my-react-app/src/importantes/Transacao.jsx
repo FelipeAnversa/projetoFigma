@@ -3,8 +3,11 @@ import { ThemeProvider } from '@mui/material/styles';
 import { Button, TextField, Stack, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { theme } from './theme';
 import { Controller, useForm } from "react-hook-form";
+import usePaginaContext from '../hooks/usePaginaContext';
 
-export default function Transacao({ adicionarTransacao }) {
+export default function Transacao() {
+    const { adicionarTransacao } = usePaginaContext();
+    
     const dataHoje = new Date().toLocaleDateString('pt-BR');
 
     const { control, handleSubmit, reset, watch, setValue } = useForm({

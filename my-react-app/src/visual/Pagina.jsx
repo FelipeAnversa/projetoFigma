@@ -17,15 +17,16 @@ import { useFiltro } from '../hooks/useFiltro';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
+import { PaginaContext } from '../context/PaginaContext';
 
 export default function Pagina() {
     const [buscaFiltrada, setBuscaFiltrada] = useState('');
     const [paginaAtual, setPaginaAtual] = useState(1);
     const [limite, setLimite] = useState(10);
-
     const { rows, resumo, paginacao, carregarDados, adicionarTransacao, excluirTransacao } = useFinanceiro(paginaAtual, limite);
     const { formatarMoeda } = useFormatacao();
-    const { handleChange } = usePaginacao(paginacao.totalPaginas, paginaAtual, setPaginaAtual);
+    const totalPaginas = paginacao.totalPaginas; 
+    const { handleChange } = usePaginacao(totalPaginas, paginaAtual, setPaginaAtual);
     const { rowsFiltradas } = useFiltro(rows, buscaFiltrada);
 
     const { entradas: valorEntradas, saidas: valorSaidas, total: valorTotal } = resumo;
@@ -82,125 +83,128 @@ export default function Pagina() {
     );
 
     return (
-        <ThemeProvider theme={theme}>
-            <Stack
-                sx={{
-                    backgroundColor: 'grey.100',
-                    height: '100vh',
-                    width: '100vw',
-                    fontFamily: 'Roboto, sans-serif',
-                    position: 'relative',
-                    paddingBottom: '80px',
-                }}
-            >
-                <Box
+        <PaginaContext.Provider 
+            value={{ 
+                adicionarTransacao, 
+                setBuscaFiltrada, 
+                rowsFiltradas, 
+                carregarDados, 
+                excluirTransacao, 
+                handleChange,
+                paginaAtual,
+                totalPaginas
+            }}
+        >
+            <ThemeProvider theme={theme}>
+                <Stack
                     sx={{
-                        backgroundColor: 'grey.50',
-                        color: 'grey.600',
-                        height: '16vh',
-                        width: '100%',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        position: 'fixed',
-                        top: 0,
-                        zIndex: 1000,
-                        gap: '1rem',
+                        backgroundColor: 'grey.100',
+                        height: '100vh',
+                        width: '100vw',
+                        fontFamily: 'Roboto, sans-serif',
+                        position: 'relative',
+                        paddingBottom: '80px',
                     }}
                 >
-                    <Stack
-                        direction="row"
-                        sx={{
-                            marginTop: { xs: '1rem', md: '0' },
-                            marginBottom: '3rem',
-                            width: '90vw',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Box
-                            component="img"
-                            src="fotos/image.png"
-                            alt="Finance"
-                            sx={{
-                                width: '180px',
-                                height: 'auto',
-                                maxWidth: '100%',
-                                objectFit: 'contain',
-                                display: 'block'
-                            }}
-                        />
-                        <Transacao 
-                            adicionarTransacao={adicionarTransacao}
-                        />
-                    </Stack>
                     <Box
                         sx={{
-                            position: 'absolute',
-                            bottom: '-3rem',
-                            display: 'flex',
-                            overflowX: 'auto',
+                            backgroundColor: 'grey.50',
+                            color: 'grey.600',
+                            height: '16vh',
                             width: '100%',
-                            justifyContent: {xs: 'flex-start', md: 'center'},
-                            alignItems: { xs: 'flex-start', md: 'center' },
-                        }}
-                    >
-                        <Cards valor={entradas} />
-                        <Cards valor={saidas} />
-                        <Card
-                            sx={{
-                                minWidth: { xs: 280, md: 400 },
-                                margin: '0 1rem',
-                                bgcolor: 'primary.dark',
-                                color: 'grey.600',
-                            }}
-                        >
-                            {total}
-                        </Card>
-                    </Box>
-                </Box>
-                <Box
-                    sx={{
-                        marginTop: '15vh',
-                        paddingTop: '1rem',
-                        minHeight: '100vh',
-                    }}
-                >
-                    <Stack
-                        sx={{
                             display: 'flex',
-                            flexDirection: 'row',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            marginTop: '4rem', 
-                            ml: '1rem',
-                            mr: '1rem'
+                            position: 'fixed',
+                            top: 0,
+                            zIndex: 1000,
+                            gap: '1rem',
                         }}
                     >
-                        <Filtrar 
-                            setBuscaFiltrada={setBuscaFiltrada}
-                        />
-                    </Stack>
-                    <Stack
+                        <Stack
+                            direction="row"
+                            sx={{
+                                marginTop: { xs: '1rem', md: '0' },
+                                marginBottom: '3rem',
+                                width: '90vw',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Box
+                                component="img"
+                                src="fotos/image.png"
+                                alt="Finance"
+                                sx={{
+                                    width: '180px',
+                                    height: 'auto',
+                                    maxWidth: '100%',
+                                    objectFit: 'contain',
+                                    display: 'block'
+                                }}
+                            />
+                            <Transacao />
+                        </Stack>
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                bottom: '-3rem',
+                                display: 'flex',
+                                overflowX: 'auto',
+                                width: '100%',
+                                justifyContent: {xs: 'flex-start', md: 'center'},
+                                alignItems: { xs: 'flex-start', md: 'center' },
+                            }}
+                        >
+                            <Cards valor={entradas} />
+                            <Cards valor={saidas} />
+                            <Card
+                                sx={{
+                                    minWidth: { xs: 280, md: 400 },
+                                    margin: '0 1rem',
+                                    bgcolor: 'primary.dark',
+                                    color: 'grey.600',
+                                }}
+                            >
+                                {total}
+                            </Card>
+                        </Box>
+                    </Box>
+                    <Box
                         sx={{
-                            marginTop: '1.2rem',
-                            marginLeft: 'auto',
-                            marginRight: 'auto',
-                            width: '85vw',
-                            marginBottom: '5rem',
+                            marginTop: '15vh',
+                            paddingTop: '1rem',
+                            minHeight: '100vh',
                         }}
                     >
-                        <Tabela 
-                            rowsFiltradas={rowsFiltradas} 
-                            carregarDados={carregarDados}
-                            excluirTransacao={excluirTransacao}
-                        />
-                    </Stack>
-                    <Paginacao 
-                        handleChange={handleChange}
-                    />
-                </Box>
-            </Stack>
-        </ThemeProvider>
+                        <Stack
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginTop: '4rem', 
+                                ml: '1rem',
+                                mr: '1rem'
+                            }}
+                        >
+                            <Filtrar />
+                        </Stack>
+                        <Stack
+                            sx={{
+                                marginTop: '1.2rem',
+                                marginLeft: 'auto',
+                                marginRight: 'auto',
+                                width: '85vw',
+                                marginBottom: '5rem',
+                            }}
+                        >
+                            <Tabela />
+                        </Stack>
+                        <Paginacao />
+                    </Box>
+                </Stack>
+            </ThemeProvider>
+        </PaginaContext.Provider>
     );
 }

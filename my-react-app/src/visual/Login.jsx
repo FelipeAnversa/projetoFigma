@@ -8,6 +8,7 @@ import Pagina from './Pagina';
 import { getInfo } from './services/get/getInfo';
 import { postLogin } from './services/post/postLogin';
 import { Controller, useForm } from "react-hook-form";
+import { LoginContext } from '../context/LoginContext'
 
 export default function Login() {
     const { control, handleSubmit, reset, formState: { errors } } = useForm({
@@ -41,7 +42,7 @@ export default function Login() {
         }
     };
 
-    const handleCadastroSucesso = (novosDados) => {
+    const onCadastroSucesso = (novosDados) => {
         setDadosLogin([...novosDados]);
         setSucesso('Cadastro realizado com sucesso! Agora faça login.');
     };
@@ -55,109 +56,113 @@ export default function Login() {
     }
 
     return (
-        <ThemeProvider theme={theme}>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: '100vh',
-                    gap: 2,
-                    backgroundImage: `url('fotos/gremio.jpg')`,
-                    backgroundSize: 'cover',
-                    backgroundRepeat: 'no-repeat',
-                }}
-            >
-                <Card
+        <LoginContext.Provider
+            value={{
+                dadosLogin,
+                onCadastroSucesso
+            }}
+        >
+            <ThemeProvider theme={theme}>
+                <Box
                     sx={{
-                        backgroundColor: 'grey.300'
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: '100vh',
+                        gap: 2,
+                        backgroundImage: `url('fotos/gremio.jpg')`,
+                        backgroundSize: 'cover',
+                        backgroundRepeat: 'no-repeat',
                     }}
                 >
-                    <Typography variant="h4" component="div" sx={{ margin: '2rem', fontFamily: 'Roboto, sans-serif', color: 'grey.700' }}>
-                        <b>Página de Login</b>
-                    </Typography>
-                </Card>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <Stack spacing={2} alignItems="center">
-                        <Controller 
-                            name='usuario'
-                            control={control}
-                            rules={{ required: "O nome de usuário é obrigatório" }}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    label="Usuário"
-                                    variant="outlined"
-                                    error={!!errors.usuario}
-                                    helperText={errors.usuario?.message}
-                                    sx={{ 
-                                        width: '300px',
-                                        input: { color: 'grey.50' },
-                                        '& label': { color: 'grey.50' },
-                                        '& .MuiOutlinedInput-root': {
-                                            backgroundColor: 'grey.700'
-                                        }
-                                    }}
-                                />
-                            )}
-                        />
-                        <Controller 
-                            name='senha'
-                            control={control}
-                            rules={{ required: "A senha é obrigatória" }}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    label="Senha"
-                                    variant="outlined"
-                                    type="password"
-                                    error={!!errors.senha}
-                                    helperText={errors.senha?.message}
-                                    sx={{ 
-                                        width: '300px', 
-                                        input: { color: 'grey.50' },
-                                        '& label': { color: 'grey.50' },
-                                        '& .MuiOutlinedInput-root': {
-                                            backgroundColor: 'grey.700'
-                                        }
-                                    }}
-                                />
-                            )}
-                        />
-                        <Stack direction="row" spacing={2} sx={{ marginTop: '1rem' }}>
-                            <Cadastro 
-                                dadosLogin={dadosLogin} 
-                                onCadastroSucesso={handleCadastroSucesso} 
+                    <Card
+                        sx={{
+                            backgroundColor: 'grey.300'
+                        }}
+                    >
+                        <Typography variant="h4" component="div" sx={{ margin: '2rem', fontFamily: 'Roboto, sans-serif', color: 'grey.700' }}>
+                            <b>Página de Login</b>
+                        </Typography>
+                    </Card>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <Stack spacing={2} alignItems="center">
+                            <Controller 
+                                name='usuario'
+                                control={control}
+                                rules={{ required: "O nome de usuário é obrigatório" }}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        label="Usuário"
+                                        variant="outlined"
+                                        error={!!errors.usuario}
+                                        helperText={errors.usuario?.message}
+                                        sx={{ 
+                                            width: '300px',
+                                            input: { color: 'grey.50' },
+                                            '& label': { color: 'grey.50' },
+                                            '& .MuiOutlinedInput-root': {
+                                                backgroundColor: 'grey.700'
+                                            }
+                                        }}
+                                    />
+                                )}
                             />
-                            <Button
-                                variant="contained"
-                                type="submit"
-                            >
-                                Entrar
-                            </Button>
+                            <Controller 
+                                name='senha'
+                                control={control}
+                                rules={{ required: "A senha é obrigatória" }}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        label="Senha"
+                                        variant="outlined"
+                                        type="password"
+                                        error={!!errors.senha}
+                                        helperText={errors.senha?.message}
+                                        sx={{ 
+                                            width: '300px', 
+                                            input: { color: 'grey.50' },
+                                            '& label': { color: 'grey.50' },
+                                            '& .MuiOutlinedInput-root': {
+                                                backgroundColor: 'grey.700'
+                                            }
+                                        }}
+                                    />
+                                )}
+                            />
+                            <Stack direction="row" spacing={2} sx={{ marginTop: '1rem' }}>
+                                <Cadastro />
+                                <Button
+                                    variant="contained"
+                                    type="submit"
+                                >
+                                    Entrar
+                                </Button>
+                            </Stack>
                         </Stack>
-                    </Stack>
-                </form>
-                <Snackbar 
-                    open={!!erro} 
-                    autoHideDuration={6000} 
-                    onClose={() => setErro('')}
-                >
-                    <Alert severity="error" onClose={() => setErro('')}>
-                        {erro}
-                    </Alert>
-                </Snackbar>
-                <Snackbar 
-                    open={!!sucesso} 
-                    autoHideDuration={6000} 
-                    onClose={() => setSucesso('')}
-                >
-                    <Alert severity="success" onClose={() => setSucesso('')}>
-                        {sucesso}
-                    </Alert>
-                </Snackbar>
-            </Box>
-        </ThemeProvider>
+                    </form>
+                    <Snackbar 
+                        open={!!erro} 
+                        autoHideDuration={6000} 
+                        onClose={() => setErro('')}
+                    >
+                        <Alert severity="error" onClose={() => setErro('')}>
+                            {erro}
+                        </Alert>
+                    </Snackbar>
+                    <Snackbar 
+                        open={!!sucesso} 
+                        autoHideDuration={6000} 
+                        onClose={() => setSucesso('')}
+                    >
+                        <Alert severity="success" onClose={() => setSucesso('')}>
+                            {sucesso}
+                        </Alert>
+                    </Snackbar>
+                </Box>
+            </ThemeProvider>
+        </LoginContext.Provider>
     );
 }

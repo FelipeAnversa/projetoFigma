@@ -1,8 +1,11 @@
 import { Button, TextField, Stack } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useForm } from "react-hook-form";
+import usePaginaContext from '../hooks/usePaginaContext';
 
-export default function Filtrar({ setBuscaFiltrada }) {
+export default function Filtrar() {
+    const { setBuscaFiltrada } = usePaginaContext();
+    
     const { register, handleSubmit } = useForm({
         defaultValues: { termo: '' }
     });

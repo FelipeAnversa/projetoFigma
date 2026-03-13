@@ -2,8 +2,10 @@ import { TextField, Button, Alert, Snackbar, Dialog, DialogActions, DialogConten
 import { useState } from 'react';
 import { postCriarConta } from '../visual/services/post/postCriarConta';
 import { Controller, useForm } from "react-hook-form";
+import useLoginContext from '../hooks/useLoginContext';
 
-export default function Cadastro({ dadosLogin, onCadastroSucesso }) {
+export default function Cadastro() {
+    const { dadosLogin, onCadastroSucesso } = useLoginContext();
     const [open, setOpen] = useState(false);
     const [erro, setErro] = useState('');
     const [sucesso, setSucesso] = useState('');

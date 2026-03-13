@@ -1,8 +1,10 @@
 import { Box , Pagination } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme';
+import usePaginaContext from '../hooks/usePaginaContext';
 
-export default function Paginacao({ paginaAtual, totalPaginas, handleChange}) {
+export default function Paginacao() {
+    const { paginaAtual, totalPaginas, handleChange} = usePaginaContext();
     return (
         <ThemeProvider theme={theme}>
             <Box

@@ -3,8 +3,10 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useFormatacao } from '../hooks/useFormatacao';
+import usePaginaContext from '../hooks/usePaginaContext';
 
-export default function Tabela({ rowsFiltradas, carregarDados, excluirTransacao }) {  
+export default function Tabela() {  
+    const { rowsFiltradas, carregarDados, excluirTransacao } = usePaginaContext();
     const { formatarMoeda, formatarData } = useFormatacao();
     const handleDelete = async (id) => {
         excluirTransacao(id);
