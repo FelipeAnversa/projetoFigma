@@ -9,6 +9,7 @@ import { getInfo } from './services/get/getInfo';
 import { postLogin } from './services/post/postLogin';
 import { Controller, useForm } from "react-hook-form";
 import { LoginContext } from '../context/LoginContext'
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
     const { control, handleSubmit, reset, formState: { errors } } = useForm({
@@ -18,6 +19,7 @@ export default function Login() {
         }
     });
 
+    const navigate = useNavigate();
     const [erro, setErro] = useState('');
     const [sucesso, setSucesso] = useState('');
     const [logado, setLogado] = useState(false);
@@ -52,7 +54,7 @@ export default function Login() {
     }, []);
 
     if (logado) {
-        return <Pagina />;
+        navigate('/pagina');
     }
 
     return (
