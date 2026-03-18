@@ -154,6 +154,21 @@ export default function Pagina() {
                                 width: '100%',
                                 justifyContent: {xs: 'flex-start', md: 'center'},
                                 alignItems: { xs: 'flex-start', md: 'center' },
+                                '&::-webkit-scrollbar': {
+                                    height: '20px', 
+                                },
+                                '&::-webkit-scrollbar-track': {
+                                    backgroundColor: 'transparent', 
+                                },
+                                '&::-webkit-scrollbar-thumb': {
+                                    backgroundColor: 'rgba(0,0,0,0.2)', 
+                                    borderRadius: '10px', 
+                                    '&:hover': {
+                                        backgroundColor: 'rgba(0,0,0,0.3)', 
+                                    },
+                                },
+                                scrollbarWidth: 'thin',
+                                scrollbarColor: 'rgba(0,0,0,0.2) transparent',
                             }}
                         >
                             <Cards valor={entradas} />
